@@ -43,7 +43,7 @@
 42  'Astronaut-08'
 43  'Doobtree'
 44  'VolodumurGrundii'
-45  'VasiaZozulia'
+45  Readability counts.
 46  'IrynaVB2023'
 47  'Anastasis08'
 48  'afedchun'
