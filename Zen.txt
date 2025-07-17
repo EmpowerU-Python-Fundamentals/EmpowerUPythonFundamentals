@@ -95,7 +95,7 @@
 94  'Bak95'
 95  'F-ros-t'
 96  'LiubomirFedorov'
-97  'mikhaylyuk'
+97  Explicit is better than implicit.
 98  'ngnlzer0'
 99  'yarusol'
 100  'Anastasiia-Hv'
