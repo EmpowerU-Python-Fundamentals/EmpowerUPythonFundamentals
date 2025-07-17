@@ -87,7 +87,7 @@
 86  'borysenkosporting'
 87  'ivze0115'
 88  'picter-max'
-89  'alchemyks'
+89  'There should be one-- and preferably only one --obvious way to do it.'
 90  Although that way may not be obvious at first unless you're Dutch.
 91  'ZenBay'
 92  'foxittt'
