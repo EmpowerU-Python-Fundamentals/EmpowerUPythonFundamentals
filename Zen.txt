@@ -85,14 +85,9 @@
 84  'twlfh'
 85  'Serg-Protsenko'
 86  'borysenkosporting'
-87  'ivze0115'
-<<<<<<< HEAD
-88  'picter-max'
-89  'There should be one-- and preferably only one --obvious way to do it.'
-=======
+87  'Unless explicitly silenced.'
 88  'In the face of ambiguity, refuse the temptation to guess.'
-89  'alchemyks'
->>>>>>> fa8a9e2 (Replaced 88 line with the line from the ZenExample.txt file)
+89  'There should be one-- and preferably only one --obvious way to do it.'
 90  Although that way may not be obvious at first unless you're Dutch.
 91  'ZenBay'
 92  'foxittt'
