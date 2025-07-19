@@ -5,7 +5,7 @@
 4  'KritAnatolii'
 5  'belikmaks'
 6. 'Sparse is better than dense.'
-7  'vpavlikk'
+7  'Readability counts.'
 8  'chaylyu'
 9  'ElveeBolt'
 10  'ViktorChuikov'
