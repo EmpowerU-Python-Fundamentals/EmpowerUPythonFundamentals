@@ -22,7 +22,7 @@
 21  Explicit is better than implicit.
 22  'nazargrechka1'
 23  'Complex is better than complicated.'
-24  'marlit7'
+24  'Flat is better than nested.'
 25  'Sparse is better than dense'
 26  'Vasylmelny'
 27  'Hugoist'
