@@ -1,4 +1,5 @@
 def string_characters(input_string):
+    """Calculate the number of characters"""
     output = {}
     for i in input_string:
         if i in output:
