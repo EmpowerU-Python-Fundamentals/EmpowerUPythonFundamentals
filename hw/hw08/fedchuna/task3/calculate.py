@@ -8,6 +8,7 @@ def calculate_area(choice, *dimensions):
         radius = dimensions[0]
         import math
         area = math.pi * math.pow(radius, 2)
+        area = round(area, 2)
         return 'circle', area
     elif choice == 'triangle':
         base, height = dimensions
