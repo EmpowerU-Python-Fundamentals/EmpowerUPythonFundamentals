@@ -7,7 +7,7 @@
 6. 'Sparse is better than dense.'
 7  'Readability counts.'
 8  'chaylyu'
-9  'ElveeBolt'
+9   Although practicality beats purity.
 10  'ViktorChuikov'
 11   Unless explicitly silenced.
 12  'lerakovaliuk'
