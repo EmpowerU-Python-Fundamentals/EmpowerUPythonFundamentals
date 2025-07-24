@@ -17,3 +17,5 @@ def pswrd():
         return "Пароль надійний"
 
 print(pswrd())
+
+
