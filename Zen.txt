@@ -103,7 +103,7 @@
 101  Sparse is better than dense.
 102  'Polysshkin'
 103  'bherych'
-104  'brylinskyi'
+104  Although practicality beats purity.
 105  'Tyk0wka'
 106  'Lightmee'
 107  'SLevadniuk'
