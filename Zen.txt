@@ -98,7 +98,7 @@
 96  'LiubomirFedorov'
 97  Explicit is better than implicit.
 98  'ngnlzer0'
-99  'yarusol'
+99  Simple is better than complex.
 100  'Anastasiia-Hv'
 101  Sparse is better than dense.
 102  'Polysshkin'
