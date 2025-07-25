@@ -2,22 +2,22 @@
 1  'OstapHapyak'
 2  'Sviat625'
 3  'karamba182'
-4  'KritAnatolii'
+4  Although practicality beats purity.
 5  'belikmaks'
 6. 'Sparse is better than dense.'
-7  'vpavlikk'
+7  'Readability counts.'
 8  'chaylyu'
-9  'ElveeBolt'
+9   Although practicality beats purity.
 10  'ViktorChuikov'
 11   Unless explicitly silenced.
 12  'lerakovaliuk'
 13  'Print777'
 14  'Although that way may not be obvious at first unless you're Dutch.'
-15  'Hryhorii1203'
+15  'Now is better than never'
 16  'LiliaSt'
 17  'uliana-krektun'
-18  'vonco8888'
-19  'Artem Dits'
+18  If the implementation is easy to explain, it may be a good idea.
+19  'Namespaces are one honking great idea -- let's do more of those!'
 20  'KShust'
 21  Explicit is better than implicit.
 22  'nazargrechka1'
@@ -28,18 +28,18 @@
 27  'Hugoist'
 28  'Although practicality beats purity.'
 29  'IlliaChystoiev'
-30.Unless explicitly silenced.
-31  'tolkov69'
-32  'ByteCraftMaster'
+30  .Unless explicitly silenced.
+31  In the face of ambiguity, refuse the temptation to guess.
+32.There should be one-- and preferably only one --obvious way to do it.
 33 Although that way may not be obvious at first unless you're Dutch.
-34 Now is better than never. 
+34 Now is better than never.
 35  'bakonette'
-36  'Danil-Shevchenko'
+36  'If the implementation is hard to explain, it's a bad idea.'
 37  'inna-rst'
-38  'Makartvit'
+38  'Beautiful is better than ugly.'
 39  'imvikushka'
 40  Explicit is better than implicit.
-41  'nezhumira'
+41  Simple is better than complex.
 42  Complex is better than complicated.
 43  'Doobtree'
 44  'VolodumurGrundii'
@@ -49,9 +49,9 @@
 48 'afedchun'
 48  Errors should never pass silently.
 49  'KaterynaMuzhetska'
-50  'urrussov'
+50  In the face of ambiguity, refuse the temptation to guess.
 51  'There should be one-- and preferably only one --obvious way to do it.'
-52  'NightOutlaw'
+52  Although that way may not be obvious at first unless you're Dutch.
 53  'Anatoleek'
 54  'BonAppetitEU'
 55  'argo222'
@@ -71,8 +71,8 @@
 69  'Lily2502'
 70  'GrandpaHoggard'
 71  '7EvenDel'
-Now is better than never.
-73  'ivansstef'
+72  Now is better than never.
+73  Although never is often better than *right* now
 74  'Dana515'
 75  'FesenkoAnton'
 76  'illyagoncharov'
@@ -86,31 +86,17 @@ Now is better than never.
 84  'Special cases aren't special enough to break the rules.'
 85  'Although practicality beats purity.'
 86  'borysenkosporting'
-<<<<<<< HEAD
-87  'ivze0115'
-<<<<<<< HEAD
-88  'picter-max'
-89  'alchemyks'
-90  'Mankret'
-=======
-=======
 87  'Unless explicitly silenced.'
->>>>>>> 6e10e86f5dc1b549efb26cfbbab7d13f87c1c6fe
 88  'In the face of ambiguity, refuse the temptation to guess.'
 89  'There should be one-- and preferably only one --obvious way to do it.'
 90  Although that way may not be obvious at first unless you're Dutch.
->>>>>>> 5a635fa5e11b4b01fefe09df83d47f7f58bfbccf
 91  'ZenBay'
 92  'foxittt'
 93  'makc501'
 94  'Bak95'
-95  'F-ros-t'
+95  Namespaces are one honking great idea -- let's do more of those!
 96  'LiubomirFedorov'
-<<<<<<< HEAD
 97  Explicit is better than implicit.
-=======
-97  Explicit is better than implicit.
->>>>>>> 5a635fa5e11b4b01fefe09df83d47f7f58bfbccf
 98  'ngnlzer0'
 99  'yarusol'
 100  'Anastasiia-Hv'
@@ -123,7 +109,8 @@ Now is better than never.
 107  'SLevadniuk'
 108  'egorbobyr'
 109  'Zero2L'
-110  'RexSplode'
-111  'dimonstools'
-112  'VolodymyrSkaskiv'
+110  Now is better than never.
+111  Although never is often better than *right* now.
+112  If the implementation is hard to explain, it's a bad idea.
 113  'AnnaKhrystiuk'
+114  'Namespaces are one honking great idea -- let's do more of those!'
