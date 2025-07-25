@@ -35,7 +35,7 @@
 34 Now is better than never.
 35  'bakonette'
 36  'If the implementation is hard to explain, it's a bad idea.'
-37  'inna-rst'
+37  'If the implementation is easy to explain, it may be a good idea.'
 38  'Beautiful is better than ugly.'
 39  'imvikushka'
 40  Explicit is better than implicit.
