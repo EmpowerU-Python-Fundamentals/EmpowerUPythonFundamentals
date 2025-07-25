@@ -67,7 +67,7 @@
 65  'zavix1988'
 66  'Although practicality beats purity.'
 67  'kamuz'
-68  'yuliaklimchuk'
+68  Unless explicitly silenced.
 69  'Lily2502'
 70  'GrandpaHoggard'
 71  '7EvenDel'
