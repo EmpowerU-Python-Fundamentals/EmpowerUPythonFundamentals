@@ -13,7 +13,11 @@
 12  'lerakovaliuk'
 13  'Print777'
 14  'Although that way may not be obvious at first unless you're Dutch.'
+<<<<<<< HEAD
+15   Now is better than never.
+=======
 15  'Now is better than never'
+>>>>>>> 3910b18d427c121b69cd71787e68b60a6a8c7041
 16  'LiliaSt'
 17  'uliana-krektun'
 18  If the implementation is easy to explain, it may be a good idea.
