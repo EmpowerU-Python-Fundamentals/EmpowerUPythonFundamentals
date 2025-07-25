@@ -53,7 +53,7 @@
 51  'There should be one-- and preferably only one --obvious way to do it.'
 52  Although that way may not be obvious at first unless you're Dutch.
 53  'Anatoleek'
-54  'BonAppetitEU'
+54  Although never is often better than *right* now.
 55  'argo222'
 56  'bezoOleksa'
 57  Namespaces are one honking great idea -- let's do more of those!
