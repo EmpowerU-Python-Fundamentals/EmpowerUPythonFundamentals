@@ -1,13 +1,13 @@
-'''Це гра в вгадування числа за 10 спроб'''
+'''This is ramndom game'''
 import  random
 
 the_number = random.randint(1, 100)
-USER_TRY = 10
+T = 10
 
 print('Вітаю! Я загадав число від 1 до 100. Спробуйте вгадати його за 7 спроб.')
 while True:
     # Перевіряємо чи залишились спроби
-    if USER_TRY == 0:
+    if T == 0:
         print(f'Всі спроби вичерпано. Це було число {the_number}.')
         break
 
@@ -24,10 +24,10 @@ while True:
     # перевіряємо чи число збігається
     if attempt > the_number:
         print('Занадто велике!')
-        USER_TRY -= 1
+        T -= 1
     elif attempt < the_number:
         print('Занадто маленьке!')
-        USER_TRY -= 1
+        T -= 1
     else:
         print(f'Ви вгадали! Це число {the_number}.')
         break
