@@ -2,7 +2,7 @@
 1  'OstapHapyak'
 2  'Sviat625'
 3  'karamba182'
-4  'KritAnatolii'
+4  Although practicality beats purity.
 5  'belikmaks'
 6. 'Sparse is better than dense.'
 7  'Readability counts.'
@@ -114,4 +114,3 @@
 112  If the implementation is hard to explain, it's a bad idea.
 113  'AnnaKhrystiuk'
 114  'Namespaces are one honking great idea -- let's do more of those!'
-115  'Complex is better than complicated.'
