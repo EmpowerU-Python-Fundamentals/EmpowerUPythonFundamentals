@@ -1,4 +1,4 @@
-"""07.1 Practical tasks. Task 2 'Largest Number" """
+"""07.1 Practical tasks. Task 2 'Largest Number' """
 
 def largest_number(a, b):
     """Function returns the largest of two number"""
@@ -13,4 +13,8 @@ def largest_number(a, b):
         raise TypeError(f"Both parameters must be numbers: 'a' is {type(a).__name__}, 'b' is {type(b).__name__}")
 
 
-print(largest_number(1, 2))
+# print(largest_number.__doc__)
+# print(largest_number(1, 2))
+# print(largest_number(5, 4))
+# print(largest_number(1, 1))
+# print(largest_number('1', 2))
