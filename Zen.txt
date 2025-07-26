@@ -2,7 +2,7 @@
 1  'OstapHapyak'
 2  'Sviat625'
 3  'karamba182'
-4  'KritAnatolii'
+4  Although practicality beats purity.
 5  'belikmaks'
 6. 'Sparse is better than dense.'
 7  'Readability counts.'
