@@ -1,3 +1,5 @@
+"""09.2 Practical tasks. Fix rect_pygame"""
+
 import pygame
 
 FPS = 60
