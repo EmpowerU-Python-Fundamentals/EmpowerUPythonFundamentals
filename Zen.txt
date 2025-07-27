@@ -109,8 +109,15 @@
 107  'SLevadniuk'
 108  'egorbobyr'
 109  'Zero2L'
+<<<<<<< HEAD
 110  Now is better than never.
 111  Although never is often better than *right* now.
 112  If the implementation is hard to explain, it's a bad idea.
 113  'AnnaKhrystiuk'
 114  'Namespaces are one honking great idea -- let's do more of those!'
+=======
+110  'RexSplode'
+111  'dimonstools'
+112  'VolodymyrSkaskiv'
+113  'AnnaKhrystiuk'
+>>>>>>> hw06-YuryyBright
