@@ -79,7 +79,7 @@
 77  'PCkyrylo2569'
 78  'yhalk1'
 79  'BobryshevDS'
-80  'IhorTre'
+80  'Complex is better than complicated.'
 81  'nomadjkeee'
 82  'Sparse is better than dense.'
 83  'nina-kovalchuk'
