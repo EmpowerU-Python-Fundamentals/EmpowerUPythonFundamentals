@@ -2,8 +2,8 @@ from math import pi, pow
 import re as regex
 
 def is_not_number(*inputs: float) -> bool:
-    for input in inputs:
-        number_pattern = regex.compile(r'^-?(?:\d+\.\d+|\d+)$')
+    number_pattern = regex.compile(r'^-?(?:\d+\.\d+|\d+)$')
+    for input in inputs: 
         if not number_pattern.match(input):
             return True
     return False
