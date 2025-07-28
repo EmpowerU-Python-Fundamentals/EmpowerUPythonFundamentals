@@ -26,7 +26,8 @@ class InputBox:
         surface.blit(text_surface, (self.rect.x + 5, self.rect.y + 5))
         pg.draw.rect(surface, self.color, self.rect, 2)
 
-    def handle_event(self,event):
+
+    def handle_event(self,event,TRY1: int = 0):
         
         if event.type == pg.MOUSEBUTTONDOWN:
             self.text = ''
@@ -38,15 +39,22 @@ class InputBox:
         if event.type == pg.KEYDOWN:
             if self.active:
                 if event.key == pg.K_RETURN:
-                    # f = self.text
                     try:
                         a = int(self.text)
                         b = random.randint(1, 100)
                         self.text = ''
-                        if a != b:
-                            self.text = f'You guessed {a}, but the number was {b}. Try again!'
+                        if a != b and TRY1 <= 10:
+                            self.text = f'You guessed {a}, but the number was {b} {10 - TRY1}  attempts left. Try again!'
+                            TRY1 = TRY1 + 1
+                        elif a != b and TRY1 > 10:
+                            self.text = f'You have exceeded the number of attempts. The number was {b}.'
+                            self.active = False
+                            return int(TRY1)
                         else:
-                            self.text = f'Congratulations! You guessed the number {b} correctly!'
+                            self.text = f'Congratulations! You guessed the number {b} from {TRY1} attempts correctly!'
+                            self.active = False
+                            TRY1 = 0
+                            return int(TRY1)
                     except ValueError:
                         self.text = "Please enter a valid number"
                         return None
@@ -56,3 +64,4 @@ class InputBox:
                     self.text = self.text[:-1]
                 elif event.unicode.isprintable():
                     self.text += event.unicode
+        return int(TRY1)
