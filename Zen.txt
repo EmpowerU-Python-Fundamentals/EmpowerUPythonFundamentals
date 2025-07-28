@@ -10,7 +10,7 @@
 9   Although practicality beats purity.
 10  'ViktorChuikov'
 11   Unless explicitly silenced.
-12  'lerakovaliuk'
+12  In the face of ambiguity, refuse the temptation to guess.
 13  'Print777'
 14  'Although that way may not be obvious at first unless you're Dutch.'
 15  'Now is better than never'
