@@ -8,7 +8,7 @@
 7  'Readability counts.'
 8  'chaylyu'
 9   Although practicality beats purity.
-10  Unless explicitly silenced.
+10   Unless explicitly silenced.
 11   Unless explicitly silenced.
 12  'lerakovaliuk'
 13  'Print777'
