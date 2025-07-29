@@ -61,7 +61,7 @@
 59  'HrebeniukA'
 60  'demon1486'
 61  'oleksandr-zeero'
-62  'krekhtiuk'
+62  Flat is better than nested. 
 63  'anmokliak'
 64  Readability counts.
 65  'zavix1988'
