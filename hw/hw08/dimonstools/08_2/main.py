@@ -1,22 +1,16 @@
 import re
 
 def is_valid_password(password):
-    if re.search(r"^.{6,16}$", password):
-        return True
-    if re.search(r"[a-z]", password):
-        return True
-    if re.search(r"[A-Z]", password):
-        return True
-    if re.search(r"[0-9]", password):
-        return True
-    if re.search(r"[$#@]", password):
-        return True
-    return False
+    pattern = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[$@#]).{6,16}$')
+    if pattern.match(password): 
+        return True 
+    else: 
+        return False
 
 # Main program
 password = input("Enter your password: ")
 
 if is_valid_password(password):
-    print("Password is valid.")
+    print("Your password is accepted")
 else:
-    print("Password is invalid.")
+    print("Your password didn't match the description")

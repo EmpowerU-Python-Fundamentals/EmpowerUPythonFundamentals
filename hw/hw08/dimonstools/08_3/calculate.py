@@ -1,5 +1,3 @@
-__all__ = ['area_rectangle', 'area_triangle', 'area_circle']
-
 from math import pi, pow
 
 def area_rectangle(a, b):
