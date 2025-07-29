@@ -13,11 +13,7 @@
 12  'lerakovaliuk'
 13  'Print777'
 14  'Although that way may not be obvious at first unless you're Dutch.'
-<<<<<<< HEAD
 15   Now is better than never.
-=======
-15  'Now is better than never'
->>>>>>> 3910b18d427c121b69cd71787e68b60a6a8c7041
 16  'LiliaSt'
 17  'uliana-krektun'
 18  If the implementation is easy to explain, it may be a good idea.
@@ -75,7 +71,7 @@
 69  'Lily2502'
 70  'GrandpaHoggard'
 71  '7EvenDel'
-Now is better than never.
+72  Now is better than never.
 73  Although never is often better than *right* now
 74  'Dana515'
 75  'FesenkoAnton'
@@ -90,31 +86,17 @@ Now is better than never.
 84  'Special cases aren't special enough to break the rules.'
 85  'Although practicality beats purity.'
 86  'borysenkosporting'
-<<<<<<< HEAD
-87  'ivze0115'
-<<<<<<< HEAD
-88  'picter-max'
-89  'alchemyks'
-90  'Mankret'
-=======
-=======
 87  'Unless explicitly silenced.'
->>>>>>> 6e10e86f5dc1b549efb26cfbbab7d13f87c1c6fe
 88  'In the face of ambiguity, refuse the temptation to guess.'
 89  'There should be one-- and preferably only one --obvious way to do it.'
 90  Although that way may not be obvious at first unless you're Dutch.
->>>>>>> 5a635fa5e11b4b01fefe09df83d47f7f58bfbccf
 91  'ZenBay'
 92  'foxittt'
 93  'makc501'
 94  'Bak95'
 95  Namespaces are one honking great idea -- let's do more of those!
 96  'LiubomirFedorov'
-<<<<<<< HEAD
 97  Explicit is better than implicit.
-=======
-97  Explicit is better than implicit.
->>>>>>> 5a635fa5e11b4b01fefe09df83d47f7f58bfbccf
 98  'ngnlzer0'
 99  'yarusol'
 100  'Anastasiia-Hv'
