@@ -3,7 +3,7 @@
 2  'Sviat625'
 3  'karamba182'
 4  Although practicality beats purity.
-5  'belikmaks'
+5  'Flat is better than nested'
 6. 'Sparse is better than dense.'
 7  'Readability counts.'
 8  'chaylyu'
