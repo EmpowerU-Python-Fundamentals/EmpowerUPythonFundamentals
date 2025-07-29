@@ -3,7 +3,7 @@
 2  'Sviat625'
 3  'karamba182'
 4  Although practicality beats purity.
-5  'belikmaks'
+5  'Flat is better than nested'
 6. 'Sparse is better than dense.'
 7  'Readability counts.'
 8  'chaylyu'
@@ -11,9 +11,9 @@
 10  'ViktorChuikov'
 11   Unless explicitly silenced.
 12  In the face of ambiguity, refuse the temptation to guess.
-13  'Print777'
+13  'Although never is often better than *right* now.'
 14  'Although that way may not be obvious at first unless you're Dutch.'
-15  'Now is better than never'
+15   Now is better than never.
 16  'LiliaSt'
 17  'uliana-krektun'
 18  If the implementation is easy to explain, it may be a good idea.
@@ -27,7 +27,7 @@
 26  'Vasylmelny'
 27  'Hugoist'
 28  'Although practicality beats purity.'
-29  'IlliaChystoiev'
+29  Errors should never pass silently.
 30  .Unless explicitly silenced.
 31  In the face of ambiguity, refuse the temptation to guess.
 32.There should be one-- and preferably only one --obvious way to do it.
@@ -35,9 +35,9 @@
 34 Now is better than never.
 35  'bakonette'
 36  'If the implementation is hard to explain, it's a bad idea.'
-37  'inna-rst'
+37  'If the implementation is easy to explain, it may be a good idea.'
 38  'Beautiful is better than ugly.'
-39  'imvikushka'
+39  Beautiful is better than ugly.
 40  Explicit is better than implicit.
 41  Simple is better than complex.
 42  Complex is better than complicated.
@@ -52,8 +52,8 @@
 50  In the face of ambiguity, refuse the temptation to guess.
 51  'There should be one-- and preferably only one --obvious way to do it.'
 52  Although that way may not be obvious at first unless you're Dutch.
-53  'Anatoleek'
-54  'BonAppetitEU'
+53  Now is better than never.
+54  Although never is often better than *right* now.
 55  'argo222'
 56  'bezoOleksa'
 57  Namespaces are one honking great idea -- let's do more of those!
@@ -61,13 +61,13 @@
 59  'HrebeniukA'
 60  'demon1486'
 61  'oleksandr-zeero'
-62  'krekhtiuk'
+62  Flat is better than nested. 
 63  'anmokliak'
-64  'AndriiNavy'
+64  Readability counts.
 65  'zavix1988'
 66  'Although practicality beats purity.'
 67  'kamuz'
-68  'yuliaklimchuk'
+68  Unless explicitly silenced.
 69  'Lily2502'
 70  'GrandpaHoggard'
 71  '7EvenDel'
@@ -75,11 +75,11 @@
 73  Although never is often better than *right* now
 74  'Dana515'
 75  'FesenkoAnton'
-76  'illyagoncharov'
+76  Although never is often better than *right* now
 77  'PCkyrylo2569'
 78  'yhalk1'
 79  'BobryshevDS'
-80  'IhorTre'
+80  'Complex is better than complicated.'
 81  'nomadjkeee'
 82  'Sparse is better than dense.'
 83  'nina-kovalchuk'
@@ -90,7 +90,7 @@
 88  'In the face of ambiguity, refuse the temptation to guess.'
 89  'There should be one-- and preferably only one --obvious way to do it.'
 90  Although that way may not be obvious at first unless you're Dutch.
-91  'ZenBay'
+91  'Now is better than never.'
 92  'foxittt'
 93  'makc501'
 94  'Bak95'
@@ -98,12 +98,12 @@
 96  'LiubomirFedorov'
 97  Explicit is better than implicit.
 98  'ngnlzer0'
-99  'yarusol'
+99  Simple is better than complex.
 100  'Anastasiia-Hv'
 101  Sparse is better than dense.
 102  'Polysshkin'
 103  'bherych'
-104  'brylinskyi'
+104  Although practicality beats purity.
 105  'Tyk0wka'
 106  'Lightmee'
 107  'SLevadniuk'
@@ -114,3 +114,4 @@
 112  If the implementation is hard to explain, it's a bad idea.
 113  'AnnaKhrystiuk'
 114  'Namespaces are one honking great idea -- let's do more of those!'
+115  'Although never is often better than *right* now.'
