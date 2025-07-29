@@ -45,11 +45,8 @@ def reset_game():
     game_state = 'playing'
     feedback_text = "Guess a number between 1 and 100!"
     user_guess = None
-    input_box.clear_text() 
-
-
-
-reset_game()
+    input_box.clear_text()
+    reset_game()
 
 
 clock = pg.time.Clock()
@@ -124,38 +121,3 @@ while not Done:
 if __name__ == "__main__":
     pg.quit()
     exit(0)
-
-# Clear text in the input box
-
-# text = "input a number "
-
-# clock = pg.time.Clock()
-# Done = False
-
-
-# # Create an instance of InputBox
-# input_box_i = input_box = m.InputBox(SCREEN_WIDTH // 2 - 350, SCREEN_HEIGHT // 2 - 16, 710, 32)
-
-# while not Done:
-#     for event in pg.event.get():
-#         if event.type == pg.QUIT:
-#             Done = True
-#         elif event.type == pg.K_ESCAPE:
-#             Done = True
-#         elif event.type == pg.MOUSEBUTTONDOWN:
-#             input_box_i.handle_event(event, TRY1)
-#         elif event.type == pg.KEYDOWN:
-#             if event.key == pg.K_z:
-#                 Done = True
-#             TRY1 = input_box_i.handle_event(event, TRY1)
-
-
-#     gameDisplay.fill(WHITE)
-#     input_box_i.draw(gameDisplay)
-    
-#     pg.display.update()
-#     clock.tick(60)
-# if __name__ == "__main__":
-#     pg.quit()
-#     exit()
-    
