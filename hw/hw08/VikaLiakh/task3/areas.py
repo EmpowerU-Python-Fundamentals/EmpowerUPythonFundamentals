@@ -1,15 +1,11 @@
 from math import pow, pi
 
-def rectangle_area(a, b):
-    '''This function calculates area of rectangle'''
+def rectangle_area(a: float, b: float) -> float:
     return round((a * b),1)
 
-def triangle_area(a, h):
-    '''This function calculates area of triangle by formula S = 0,5*h*a'''
-    
+def triangle_area(a: float, h: float) -> float:
     area = 0.5 * h * a
     return round(area,1)
 
-def circle_area (radius):
-    '''This function calculates area of circle'''
+def circle_area (radius: float) -> float:
     return round((pi * pow(radius,2)),1)
