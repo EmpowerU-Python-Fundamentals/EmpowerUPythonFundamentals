@@ -8,7 +8,7 @@
 7  'Readability counts.'
 8  'chaylyu'
 9   Although practicality beats purity.
-10  'ViktorChuikov'
+10   Unless explicitly silenced.
 11   Unless explicitly silenced.
 12  In the face of ambiguity, refuse the temptation to guess.
 13  'Although never is often better than *right* now.'
