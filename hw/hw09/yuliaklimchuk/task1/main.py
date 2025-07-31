@@ -50,6 +50,14 @@ while not done:
                 else:
                     active = False
                 color = colors.Black if active else colors.Gray
+                if not draw and restart_button.collidepoint(event.pos):
+                    random_number = random.randint(1, 100)
+                    attempts = 10
+                    draw = True
+                    active = False
+                    text = ''
+                    text_condition = "Enter your number"
+                    text_message = ''
         if event.type == pygame.KEYDOWN:
             text_message=''
             if active and draw:
@@ -84,6 +92,11 @@ while not done:
     gameDisplay.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
     gameDisplay.blit(text_message_print, (WIDTH/7, HEIGHT-100))
     pygame.draw.rect(gameDisplay, color, input_box, 2)
+    restart_button = pygame.Rect(WIDTH / 2 - 60, HEIGHT - 50, 120, 30)
+    if not draw:
+        pygame.draw.rect(gameDisplay, colors.Maroon, restart_button)
+        restart_text = font_in_box.render("Play again", True, colors.Black)
+        gameDisplay.blit(restart_text, (restart_button.x + 20, restart_button.y + 7))
     pygame.display.update()
     clock.tick(FPS)
 
