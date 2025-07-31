@@ -1,4 +1,4 @@
-"""07.1 Practical tasks. Task 2 'Largest Number" """
+"""07.1 Practical tasks. Task 2 'Largest Number' """
 
 def rectangle_area(x):
     """Function calculates area of a reactangle"""
