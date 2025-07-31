@@ -54,18 +54,21 @@ while not done:
             text_message=''
             if active and draw:
                 if event.key == pygame.K_RETURN:
-                    customer_number = int(text)
-                    attempts -=1
-                    if customer_number < random_number:
-                        text_message = "The entered number is less than the specified number."
-                    elif customer_number > random_number:
-                        text_message = "The entered number is greater than the specified number."
-                    elif customer_number == random_number:
-                        text_message = "Congratulations! You guessed the number!"
-                        draw = False
-                    if attempts == 0 and customer_number != random_number:
-                        text_message = "Game over! The number was " + str(random_number)
-                        draw = False
+                    if text.isdigit():
+                        customer_number = int(text)
+                        attempts -=1
+                        if customer_number < random_number:
+                            text_message = "The entered number is less than the specified number."
+                        elif customer_number > random_number:
+                            text_message = "The entered number is greater than the specified number."
+                        elif customer_number == random_number:
+                            text_message = "Congratulations! You guessed the number!"
+                            draw = False
+                        if attempts == 0 and customer_number != random_number:
+                            text_message = "Game over! The number was " + str(random_number)
+                            draw = False 
+                    else:
+                        text_message = "Invalid input. Enter the number"
                     text = ''  # Очищення після Enter
                 elif event.key == pygame.K_BACKSPACE:
                     text = text[:-1]
