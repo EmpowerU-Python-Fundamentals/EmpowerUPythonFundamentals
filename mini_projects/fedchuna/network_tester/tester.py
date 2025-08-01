@@ -185,6 +185,7 @@ class Apl(tk.Toplevel):
         else:
             target_encoding = 'utf-8'
         try:
+            trace_timeout = 75  # Увеличиваем таймаут до 75 секунд для трассировки
             process = subprocess.Popen(command,
                                        stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE,
@@ -192,7 +193,7 @@ class Apl(tk.Toplevel):
                                        encoding=target_encoding,
                                        errors='replace')
 
-            stdout, stderr = process.communicate(timeout=60)
+            stdout, stderr = process.communicate(timeout=trace_timeout)
             if stdout:
                 self.output_text.insert(tk.END, stdout)
                 self.log_message(f"Trace {ip} successful:\n{stdout}")
@@ -214,7 +215,9 @@ class Apl(tk.Toplevel):
                 stdout_str = str(stdout) 
                 stderr_str = str(stderr)
 
-            self.output_text.insert(tk.END, f"Trace to {ip} timed out.\nOutput (if any):\n{stdout_str}\nErrors (if any):\n{stderr_str}\n")
+            self.output_text.insert(tk.END, f"Trace to {ip} timed out (waited {trace_timeout} seconds).\n" \
+                                             f"Output (if any):\n{stdout_str}\n" \
+                                             f"Errors (if any):\n{stderr_str}\n") 
             self.log_message(f"Trace to {ip} timed out.")
         except FileNotFoundError:
             self.output_text.insert(tk.END, "Traceroute command not found. Make sure it's in your system's PATH.\n")

@@ -15,7 +15,7 @@ class App(tk.Tk):
         self.log_file_name = "app_log.log"
         self.log_pass = m.get_log_file_path(self.log_file_name)
         self.title("Main window")
-        self.geometry("400x200")
+        self.geometry("300x400")
         background_lable = tk.Label(self.root, bg="grey")
         background_lable.place(x=0, y=0, relwidth=1, relheight=1)
 
