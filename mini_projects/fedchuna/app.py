@@ -38,10 +38,9 @@ class App(tk.Tk):
         self.label.config(text=f"{button_name} Started")
         self.log_message(f"{button_name} Started")
         
-        self.withdraw() # Скрываем главное окно App сразу, независимо от того, какая кнопка нажата
+        self.withdraw()
 
         if button_name == "Keylooker":
-            # Проверяем, существует ли окно Keylooker и открыто ли оно
             if self.keylooker_window is None or not self.keylooker_window.winfo_exists():
               
                 key.run_key_looker()

@@ -5,7 +5,7 @@ import platform
 from tkinter.scrolledtext import ScrolledText
 from pathlib import Path
 import tkinter as tk
-from tkinter import ttk # Все равно нужен для ttk.Label и ttk.Entry
+from tkinter import ttk 
 
 
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -72,7 +72,7 @@ class Apl(tk.Toplevel):
         
         self.output_text = ScrolledText(main_frame, wrap=tk.WORD, height=10, width=50, font=('Arial', 10))
         self.output_text.grid(row=current_row, column=0, columnspan=2, pady=10, sticky="nsew")
-        current_row += 1 # Обновляем текущую строку, если что-то будет добавляться ниже
+        current_row += 1 
         main_frame.grid_rowconfigure(current_row-1, weight=1) 
     
     def on_button_click(self, button_name):
@@ -119,7 +119,7 @@ class Apl(tk.Toplevel):
         self.log_message(f"Pinging {ip}")
 
         param = '-n' if platform.system().lower() == 'windows' else '-c'
-        count = '10' # Количество пакетов для пинга
+        count = '10'
         command = ['ping', param, count, ip]
         if platform.system().lower() == 'windows':
             target_encoding = 'cp866' 
@@ -185,7 +185,7 @@ class Apl(tk.Toplevel):
         else:
             target_encoding = 'utf-8'
         try:
-            trace_timeout = 75  # Увеличиваем таймаут до 75 секунд для трассировки
+            trace_timeout = 75 
             process = subprocess.Popen(command,
                                        stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE,
