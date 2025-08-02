@@ -1,4 +1,14 @@
+"""change the name"""
 def class_name_changer(cls, new_name):
+    """changing name of the class
+    Args:
+        new_name (str): _new name
+
+    Raises:
+        ValueError: if class name is empty
+        ValueError: if class name doesn`t start with an uppercase letter
+        ValueError: if class name doesn`t only contains alphanumeric characters
+    """
     if not new_name:
         raise ValueError("Class name cannot be empty")
     first_char = new_name[0]
