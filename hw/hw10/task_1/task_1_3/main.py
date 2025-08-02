@@ -12,5 +12,7 @@ def main():
 
     Employee.get_counter()
 
+    employee_1.class_info()
+
 if __name__ == "__main__":
     main()
