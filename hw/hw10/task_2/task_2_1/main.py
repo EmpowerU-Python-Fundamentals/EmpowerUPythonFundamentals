@@ -7,5 +7,6 @@ def main():
     print(ball1)
     print(ball2)   
 
+# https://www.codewars.com/kata/regular-ball-super-ball
 if __name__ == "__main__":
     main()
