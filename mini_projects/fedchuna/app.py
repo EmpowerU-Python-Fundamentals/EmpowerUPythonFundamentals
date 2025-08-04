@@ -42,13 +42,12 @@ class App(tk.Tk):
 
         if button_name == "Keylooker":
             if self.keylooker_window is None or not self.keylooker_window.winfo_exists():
-              
                 key.run_key_looker()
                 self.deiconify() 
 
                 self.log_message("Keylooker window started (manual parent restore may be needed if it's a blocking app).")
 
-            else: 
+            else:
                 self.keylooker_window.lift()
         
         else:

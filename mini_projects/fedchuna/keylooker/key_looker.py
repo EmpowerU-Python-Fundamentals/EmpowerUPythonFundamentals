@@ -1,8 +1,10 @@
 import sys
+from pathlib import Path
+import os
 import pygame as pg
 from . import module as m
-import os
-from pathlib import Path
+
+
 
 # --- Новая функция для получения пути к ресурсам ---
 def get_resource_path(relative_path):
@@ -31,12 +33,16 @@ def log_message(message, log_file_path):
 # --- Головна функція, яка містить логіку Pygame ---
 def run_key_looker():
     pg.init()
+    pg.mixer.init()
+    sound_path = get_resource_path(os.path.join("sound", "zvuk.wav"))
+    sound = pg.mixer.Sound(sound_path)
 
     SCREEN_WIDTH = 800
     SCREEN_HEIGHT = 600
 
     # Получаем пути к ресурсам
     image_path = get_resource_path(os.path.join("img", "scr.jpg"))
+    # sound_path = get_resource_path(os.path.join("sound", "zvuk.wav"))
     log_file_name = "log_keylooker.log"
     # m.get_log_file_path теперь будет создавать папку logs рядом с .exe
     keylooker_log_path = m.get_log_file_path(log_file_name)
@@ -79,6 +85,7 @@ def run_key_looker():
 
                 elif event.type == pg.KEYDOWN:
                     key_code = event.key
+                    sound.play()
                     if event.key == pg.K_z and (event.mod & pg.KMOD_CTRL):
                         Done = True
                         log_message(f"{event} = EXIT (Ctrl+Z) --- Program---", keylooker_log_path)
@@ -93,6 +100,7 @@ def run_key_looker():
                     if input_box.rect.collidepoint(event.pos):
                         Done = True
                         log_message(f"{event} = EXIT (Mouse Click) --- Program---", keylooker_log_path)
+                    sound.play()
 
             gameDisplay.blit(background_image, (0, 0))
             input_box.draw(gameDisplay)
