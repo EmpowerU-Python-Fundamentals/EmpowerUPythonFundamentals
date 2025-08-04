@@ -35,8 +35,8 @@ class App(tk.Tk):
         self.label.pack(pady=40)
 
     def on_button_click(self, button_name):
-        self.label.config(text=f"{button_name} Started")
-        self.log_message(f"{button_name} Started")
+        self.label.config(text=f"{button_name} Closed Choose an Option")
+        self.log_message(f"{button_name} Closed")
         
         self.withdraw()
 
@@ -58,7 +58,7 @@ class App(tk.Tk):
                 self.network_tester_window.update_idletasks()
                 self.network_tester_window.update()
             self.network_tester_window.lift() 
-        self.log_message(f"{button_name} had closed (parent window hidden).")
+        self.log_message(f"Network Tester had closed")
     
     def on_network_tester_close(self):
 
@@ -66,7 +66,8 @@ class App(tk.Tk):
             self.network_tester_window.destroy()
             self.network_tester_window = None
         self.deiconify()
-        self.log_message("Network Tester Closed. Main window restored.")
+        
+        self.label.config(text=f"{button_name} Started")
 
 
     def on_keylooker_close(self):
