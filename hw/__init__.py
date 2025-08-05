@@ -1,8 +1,6 @@
 import json
 import os
-import csv
 from dataclasses import dataclass, asdict, field
-from io import StringIO
 
 
 @dataclass
@@ -22,6 +20,9 @@ class StudentInfo:
         "name_discord",
     ] + [f"hw{i:02d}" for i in range(6, 15)]
 
+    def get_name(self):
+        return f"{self.name_discord[:15]:<15}\t[ {self.name_github} ]"
+
     def to_dict(self):
         return asdict(self)
 
@@ -39,11 +40,8 @@ class StudentInfo:
             else:
                 row_values.append(None)
         return tuple(row_values)
+
     def print_homework_status(self):
-        """
-        Друкує ім'я користувача GitHub і статус виконання домашніх завдань.
-        Використано ANSI-коди для кольорового виведення в терміналі.
-        """
         GREEN = "\033[92m"
         RED = "\033[91m"
         RESET = "\033[0m"
@@ -54,45 +52,76 @@ class StudentInfo:
                 status_items.append(f"{GREEN}{hw}{RESET}")
             else:
                 status_items.append(f"{RED}{hw}{RESET}")
-        
+
         status_string = " ".join(status_items)
-        print(f"{self.name_github:<20}: {status_string}")
+        print(f"{self.get_name():<40}: {status_string}")
+
 
 def get_subdirectories(directory):
-    # Перевіряємо, чи існує директорія і чи це саме директорія
     if not os.path.isdir(directory):
-        # print(f"Помилка: Директорії '{directory}' не існує.")
         return []
 
-    # Використовуємо list comprehension для створення списку субдиректорій
     return [
         name
         for name in os.listdir(directory)
         if os.path.isdir(os.path.join(directory, name))
     ]
 
-STUDENTS = {}
-# Приклад для поточної директорії
+
+def read_students_from_file(file_path: str) -> dict[str, StudentInfo]:
+    student_data = {}
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            for line in f:
+                clean_line = line.strip()
+                if not clean_line:
+                    continue
+
+                parts = clean_line.split(":", 1)
+                if len(parts) != 2:
+                    print(f"Format error in line: {clean_line}")
+                    continue
+
+                name_discord_raw = parts[0].strip()
+                name_github_raw = parts[1].strip()
+
+                name_discord = name_discord_raw.strip('"')
+                name_github = name_github_raw.strip('"')
+
+                student = StudentInfo(
+                    name_discord=name_discord, name_github=name_github
+                )
+
+                student_data[name_github] = student
+
+    except FileNotFoundError:
+        print(f"Error: File at path '{file_path}' not found.")
+        return {}
+    except Exception as e:
+        print(f"An error occurred while reading the file: {e}")
+        return {}
+
+    return student_data
+
+
+STUDENTS = read_students_from_file("./hw/github_username.txt")
 current_directory = "./hw"
 subdirs_current = get_subdirectories(current_directory)
-# print(f"Субдиректорії в поточній директорії: {subdirs_current}")
+unidentified_students = set()
 for subdir in subdirs_current:
-    # print(f"Обробка субдиректорії: {subdir}")
     subdirs = get_subdirectories(f"{current_directory}/{subdir}")
     for key in subdirs:
-        # print(f"\t{key}", key in STUDENTS)
         if key not in STUDENTS:
-            STUDENTS[key] = StudentInfo(
-                name_github=key
-            )
-        STUDENTS[key].homework_completion[subdir] = True
-    # print(f"\tСубдиректорії: {subdirs}")
+            unidentified_students.add(key)
+        else:
+            STUDENTS[key].homework_completion[subdir] = True
 
-
-from pprint import pprint
-# print(sorted(STUDENTS.keys()))
-# pprint(STUDENTS)
-print(f"student count:\t{len(STUDENTS)}")
-for name, student in {key: STUDENTS[key] for key in sorted(STUDENTS, key=lambda k: k.lower())}.items():
-    # print(student.to_csv_row())
-    student.print_homework_status()
+print("Unidentified students:")
+for u_student in unidentified_students:
+    print(f"\t{u_student}")
+print(f"Student count:\t{len(STUDENTS)}\t{len(set(STUDENTS))}".center(70))
+for name, student in {
+    key: STUDENTS[key] for key in sorted(STUDENTS, key=lambda k: k.lower())
+}.items():
+    if any([value for _, value in student.homework_completion.items()]):
+        student.print_homework_status()
