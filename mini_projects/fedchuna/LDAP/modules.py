@@ -17,11 +17,11 @@ ldap_server = 'ldap://s-kiev-r03.uvk.ua'
 bind_dn = 'CN=Администратор Федчун Артем,OU=DOMAIN_ADMINS,OU=SYS,OU=GROUPS,OU=UVK,DC=uvk,DC=ua'
 bind_password = '*YfM28~y9u'
 base_dn = 'OU=UVK,DC=uvk,DC=ua'
-search_filter = '(&(objectClass=user)(sAMAccountName=a-a.fedchun))'
-search_attributes = ['displayName']
+search_filter = '(&(objectClass=user)(cn=Fedchun Artem))'
+search_attributes = ['sAMAccountName', 'displayName', 'mail', 'telephonenumber']
 #static variables
 l = None
-
+search_info_dict = dict()
 #Function to work With Ldap
 def log_message(message):
         log_file_name = "LDAP.log"
@@ -51,10 +51,12 @@ def bind(l_s, l_i, b_dn, b_pass):
         log_message(f"Произошла ошибка LDAP: {e}")
         print(f"Произошла ошибка LDAP: {e}")
 
-def search_user(l_ll, bas_dn, search_fil, search_attribut):
+def search_user(l_ll, bas_dn, search_fil, search_attribut, dct):
     try:
         print("Попытка поиска...")
         log_message("Попытка поиска...")
+        h = "\\"
+        counter = 0
         result_set = l_ll.search_s(bas_dn, ldap.SCOPE_SUBTREE, search_fil, search_attribut)
         print(result_set)
         log_message(f"Result of search {result_set}")
@@ -63,20 +65,34 @@ def search_user(l_ll, bas_dn, search_fil, search_attribut):
             log_message("Пользователь найден! 🎉")
             for dn, entry in result_set:
                 if dn is not None and entry:  # Проверяем, что DN и entry не пустые
-                    print(f"Distinguished Name: {dn}")
-                    log_message(f"Distinguished Name: {dn}")
+                    f_i = dn.split(',')
+                    f_i = f_i[-3::-1]
+                    for i in f_i:
+                        c = ''
+                        c += f"{i}\\"
+                        c = c[3::]
+                        h += c
+                        counter += 1
+                    f_i = h[:-1:]
+                    print(f"Distinguished Name: {f_i}")
+                    log_message(f"Distinguished Name: {f_i}")
+                    dct["Distinguished Name"] = f_i
                     for attr, value in entry.items():
                         if value:
                             print(f"  {attr}: {value[0].decode('utf-8')}")
                             log_message(f"  {attr}: {value[0].decode('utf-8')}")
+                            dct[attr] = value[0].decode('utf-8')
                         else:
                             print(f"  {attr}: (значение отсутствует)")
                             log_message(f"  {attr}: {value[0].decode('utf-8')}")
-                        print(f"  {attr}: {value[0].decode('utf-8')}")
-                        log_message(f"  {attr}: {value[0].decode('utf-8')}")
+                            
+                        # print(f"  {attr}: {value[0].decode('utf-8')}")
+                        # log_message(f"  {attr}: {value[0].decode('utf-8')}")
         else:
             print("Пользователь не найден. 😔")
             log_message("Пользователь не найден. 😔")
+        return dct
+
     except ldap.LDAPError as e:
         print(f"Произошла ошибка LDAP: {e}")
         log_message(f"Произошла ошибка LDAP: {e}")
@@ -98,8 +114,10 @@ def close_bind(ll):
     else:
         log_message("-----Module For Warcking with LDAP Initialized-----")
 
-# l = bind(ldap_server, l, bind_dn, bind_password)
-# l = search_user(l, base_dn, search_filter, search_attributes)
+l = bind(ldap_server, l, bind_dn, bind_password)
+print(l)
+search_info_dict = search_user(l, base_dn, search_filter, search_attributes, search_info_dict)
 
 if __name__ == "__main__":
     close_bind(l)
+    print(search_info_dict)
