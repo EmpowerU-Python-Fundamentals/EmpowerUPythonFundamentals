@@ -17,7 +17,7 @@ ldap_server = 'ldap://s-kiev-r03.uvk.ua'
 bind_dn = 'CN=Администратор Федчун Артем,OU=DOMAIN_ADMINS,OU=SYS,OU=GROUPS,OU=UVK,DC=uvk,DC=ua'
 bind_password = '*YfM28~y9u'
 base_dn = 'OU=UVK,DC=uvk,DC=ua'
-search_filter = '(&(objectClass=user)(cn=Fedchun Artem))'
+# search_filter = '(&(objectClass=user)(cn=Fedchun Artem))'
 search_attributes = ['sAMAccountName', 'displayName', 'mail', 'telephonenumber']
 #static variables
 l = None
@@ -51,13 +51,34 @@ def bind(l_s, l_i, b_dn, b_pass):
         log_message(f"Произошла ошибка LDAP: {e}")
         print(f"Произошла ошибка LDAP: {e}")
 
-def search_user(l_ll, bas_dn, search_fil, search_attribut, dct):
+def input_user_to_search():
+    try:
+        strn = ''
+        a = input('Type name:')
+        b = input('Type second name:')
+        a = a.upper()
+        b = b.upper()
+        strn += a +' '+ b + '))'
+        if a.isalpha() and b.isalpha():
+            return strn
+        else:
+            raise Exception
+    except Exception as e:
+        print(f'Not Correct input: {e}')
+        log_message(f'Not Correct input: {e}')
+    
+
+def search_user(l_ll, bas_dn, search_attribut, dct):
     try:
         print("Попытка поиска...")
         log_message("Попытка поиска...")
+        # search_filter = '(&(objectClass=user)(cn=Fedchun Artem))'
+        search_filter = '(&(objectClass=user)(cn='
+        search_filter += input_user_to_search()
+        print(search_filter)
         h = "\\"
         counter = 0
-        result_set = l_ll.search_s(bas_dn, ldap.SCOPE_SUBTREE, search_fil, search_attribut)
+        result_set = l_ll.search_s(bas_dn, ldap.SCOPE_SUBTREE, search_filter, search_attribut)
         print(result_set)
         log_message(f"Result of search {result_set}")
         if result_set:
@@ -96,6 +117,10 @@ def search_user(l_ll, bas_dn, search_fil, search_attribut, dct):
     except ldap.LDAPError as e:
         print(f"Произошла ошибка LDAP: {e}")
         log_message(f"Произошла ошибка LDAP: {e}")
+        
+    except Exception as e:
+        print(f"Error {e}")
+        log_message(f"Error {e}")
 
 def create_user():
     pass
@@ -116,7 +141,7 @@ def close_bind(ll):
 
 l = bind(ldap_server, l, bind_dn, bind_password)
 print(l)
-search_info_dict = search_user(l, base_dn, search_filter, search_attributes, search_info_dict)
+search_info_dict = search_user(l, base_dn, search_attributes, search_info_dict)
 
 if __name__ == "__main__":
     close_bind(l)
