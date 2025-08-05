@@ -2,6 +2,10 @@ import os
 import sys
 import tkinter as tk
 from tkinter import ttk
+
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(parent_dir)
+
 from keylooker import key_looker as key # Импорт key_looker
 from keylooker import module as m
 from network_tester import tester as t # Предполагаем, что вы используете tester.py как основной
@@ -67,7 +71,7 @@ class App(tk.Tk):
             self.network_tester_window = None
         self.deiconify()
         
-        self.label.config(text=f"{button_name} Started")
+        # self.label.config(text=f"{self.bindbutton_name} Started")
 
 
     def on_keylooker_close(self):
