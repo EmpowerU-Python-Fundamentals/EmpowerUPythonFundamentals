@@ -39,12 +39,29 @@ class StudentInfo:
             else:
                 row_values.append(None)
         return tuple(row_values)
+    def print_homework_status(self):
+        """
+        Друкує ім'я користувача GitHub і статус виконання домашніх завдань.
+        Використано ANSI-коди для кольорового виведення в терміналі.
+        """
+        GREEN = "\033[92m"
+        RED = "\033[91m"
+        RESET = "\033[0m"
 
+        status_items = []
+        for hw, completed in self.homework_completion.items():
+            if completed:
+                status_items.append(f"{GREEN}{hw}{RESET}")
+            else:
+                status_items.append(f"{RED}{hw}{RESET}")
+        
+        status_string = " ".join(status_items)
+        print(f"{self.name_github}: {status_string}")
 
 def get_subdirectories(directory):
     # Перевіряємо, чи існує директорія і чи це саме директорія
     if not os.path.isdir(directory):
-        print(f"Помилка: Директорії '{directory}' не існує.")
+        # print(f"Помилка: Директорії '{directory}' не існує.")
         return []
 
     # Використовуємо list comprehension для створення списку субдиректорій
@@ -58,21 +75,23 @@ STUDENTS = {}
 # Приклад для поточної директорії
 current_directory = "./hw"
 subdirs_current = get_subdirectories(current_directory)
-print(f"Субдиректорії в поточній директорії: {subdirs_current}")
+# print(f"Субдиректорії в поточній директорії: {subdirs_current}")
 for subdir in subdirs_current:
-    print(f"Обробка субдиректорії: {subdir}")
+    # print(f"Обробка субдиректорії: {subdir}")
     subdirs = get_subdirectories(f"{current_directory}/{subdir}")
     for key in subdirs:
+        # print(f"\t{key}", key in STUDENTS)
         if key not in STUDENTS:
             STUDENTS[key] = StudentInfo(
                 name_github=key
             )
-            STUDENTS[key].homework_completion[subdir] = True
-    print(f"\tСубдиректорії: {subdirs}")
+        STUDENTS[key].homework_completion[subdir] = True
+    # print(f"\tСубдиректорії: {subdirs}")
 
 
 from pprint import pprint
-print(sorted(STUDENTS.keys()))
-pprint(STUDENTS)
-
-['Aboiko', 'AndriiNavy', 'Astronaunt-08', 'Astronaut-08', 'ByteCraftMaster', 'Danil-Shevchenko', 'ElveeBolt', 'Eugen1017', 'Hryhorii1203', 'IhorTre', 'IlliaChystoiev', 'KShust', 'KritAnatolii', 'Leraaaaa-codder', 'Makartvit', 'NightOutlaw', 'PCkyrylo2569', 'Print777', 'ReiGarr', 'RexSplode', 'Schevchenko0207', 'Serg-Pro', 'Serg_Pro', 'Shevchenko0207', 'UBIVATOR161', 'VadHk', 'VasiaZozulia', 'VikaLiakh', 'ViktorChuikov', 'VolodymyrSkaskiv', 'WorkTimwan', 'YuryyBright', 'ZenBay', 'alchemyks', 'anatoleek', 'bezoOleksa', 'brylinskyi', 'deboramay', 'dimonstools', 'f00a0a', 'fedchuna', "fedchuna'", 'illyagoncharov', 'imvikushka', 'inna-rst', 'ivansstef', 'ivze0115', 'kgorova', 'krekhtiuk', 'lerakovaliuk', 'lhalam', 'lians', 'maksymminin', 'mankret', 'marlit7', 'nezhumira', 'nyckolay', 'oleksandr-zeero', 'olymp7', 'omeliana-omeliana', 'picter-max', 'saudeawd', 'tolkov69', 'twlf', 'twlfh', 'uliana', 'urrussov', 'vikaliakh', 'vlbezbozhnyi', 'vonco8888', 'vpavlikk', 'yarusol', 'yuliaklimchuk']
+# print(sorted(STUDENTS.keys()))
+# pprint(STUDENTS)
+for name, student in {key: STUDENTS[key] for key in sorted(STUDENTS, key=lambda k: k.lower())}.items():
+    # print(student.to_csv_row())
+    student.print_homework_status()
