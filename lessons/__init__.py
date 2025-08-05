@@ -56,7 +56,7 @@ class StudentInfo:
                 status_items.append(f"{RED}{hw}{RESET}")
         
         status_string = " ".join(status_items)
-        print(f"{self.name_github}: {status_string}")
+        print(f"{self.name_github:<20}: {status_string}")
 
 def get_subdirectories(directory):
     # Перевіряємо, чи існує директорія і чи це саме директорія
@@ -92,6 +92,7 @@ for subdir in subdirs_current:
 from pprint import pprint
 # print(sorted(STUDENTS.keys()))
 # pprint(STUDENTS)
+print(f"student count:\t{len(STUDENTS)}")
 for name, student in {key: STUDENTS[key] for key in sorted(STUDENTS, key=lambda k: k.lower())}.items():
     # print(student.to_csv_row())
     student.print_homework_status()
