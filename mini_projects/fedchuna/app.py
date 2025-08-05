@@ -58,7 +58,7 @@ class App(tk.Tk):
                 self.network_tester_window.update_idletasks()
                 self.network_tester_window.update()
             self.network_tester_window.lift() 
-        self.log_message(f"Network Tester had closed")
+        self.log_message("Network Tester had closed")
     
     def on_network_tester_close(self):
 
