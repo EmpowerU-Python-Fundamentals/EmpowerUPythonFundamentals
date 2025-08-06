@@ -2,6 +2,7 @@ import pygame
 
 FPS = 60
 
+
 WIDTH_DISPLAY = 500
 HEIGHT_DISPLAY = 500
 
