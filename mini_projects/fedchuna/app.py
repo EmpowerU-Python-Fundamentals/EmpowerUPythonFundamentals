@@ -84,14 +84,15 @@ class App(tk.Tk):
             self.LDAP_window.destroy()
             self.LDAP_window = None
         self.deiconify()
-    
+        self.log_message("LDAP app closed. Main window restored.")
+        
     def on_network_tester_close(self):
 
         if self.network_tester_window is not None:
             self.network_tester_window.destroy()
             self.network_tester_window = None
         self.deiconify()
-        
+        self.log_message("Network tester Closed. Main window restored.")
         # self.label.config(text=f"{self.bindbutton_name} Started")
 
 
