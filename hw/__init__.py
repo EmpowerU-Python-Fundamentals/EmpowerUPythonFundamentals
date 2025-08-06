@@ -113,6 +113,12 @@ for subdir in subdirs_current:
     for key in subdirs:
         if key not in STUDENTS:
             unidentified_students.add(key)
+            student = StudentInfo(
+                    name_github=key
+                )
+            student.homework_completion[subdir] = True
+            STUDENTS[key] = student
+
         else:
             STUDENTS[key].homework_completion[subdir] = True
 
