@@ -26,11 +26,11 @@ class LD(tk.Toplevel):
         self.config_file_name = "ldap_config.cfg"
         self.ldap_conf_pass = get_config_file_path(self.config_file_name)
         self.ldap_conf_lines = ldap_conf_lines(self.ldap_conf_pass)
-        log_message("---Aplication Inicialized---")
-        if self.ldap_conf_lines == 4:
+        self.log_message("---Aplication Inicialized---")
+        if self.ldap_conf_lines != 4:
             ldap_athorization() 
             """to write logic and authorization.py"""
-        
+        m_l.bind()
         self.title("Ldap Module")
         self.geometry("600x550")
         self.resizable(False, False)
@@ -62,7 +62,7 @@ class LD(tk.Toplevel):
         
         self.output_text = ScrolledText(main_frame, wrap=tk.WORD, height=10, width=50, font=('Arial', 10))
         self.output_text.grid(row=current_row, column=0, columnspan=2, pady=10, sticky="nsew")
-        current_row += 1 
+        current_row += 1
         main_frame.grid_rowconfigure(current_row-1, weight=1)
     
     def on_button_click(self, button_name):
@@ -151,18 +151,26 @@ class LD(tk.Toplevel):
         
         self.output_text.see(tk.END)
 
-def get_config_file_path(log_file_name):
-    log_directory_name = "config"
+    def log_message(self,message):
+    #""" Writes a timestamped message to the specified config file. """
+        try:
+            with open(self.log_pass, 'a', encoding='utf-8') as log_f:
+                log_f.write(f"{m.date_time()}:{message}\n")
+        except Exception as e:
+            print(f"Error writing to log file: {e}")
+
+def get_config_file_path(cfg_file_name):
+    cfg_directory_name = "config"
     if getattr(sys, 'frozen', False):
         base_dir = os.path.dirname(sys.executable) 
     else:
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-    log_dir_path = os.path.join(base_dir, log_directory_name)
-    if not os.path.exists(log_dir_path):
-        os.makedirs(log_dir_path)
+    cfg_dir_path = os.path.join(base_dir, cfg_directory_name)
+    if not os.path.exists(cfg_dir_path):
+        os.makedirs(cfg_dir_path)
         
-    return os.path.join(log_dir_path, log_file_name)    
+    return os.path.join(cfg_dir_path, cfg_file_name)    
 
 def ldap_conf_lines(cfg_file):
     try:
@@ -171,17 +179,11 @@ def ldap_conf_lines(cfg_file):
             for line in cfg_f:
                 line_count += 1
             return line_count
-    except FileNotFoundError as fe:
-        log_message(fe)
-        
-def log_message(self,message):
-    
-    """ Writes a timestamped message to the specified config file. """
-    try:
-        with open(self.log_pass, 'a', encoding='utf-8') as log_f:
-            log_f.write(f"{m.date_time()}:{message}\n")
-    except Exception as e:
-        print(f"Error writing to log file: {e}")
+    # except FileNotFoundError as fe:
+    #     LD().log_message(fe)
+    except: 
+        pass    
+
 
 def run_standalone_tester():
     

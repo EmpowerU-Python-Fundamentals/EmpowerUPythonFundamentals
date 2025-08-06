@@ -13,10 +13,10 @@ from network_tester import tester as t
 # Параметры подключения
 ## Будут перенесены в основной модуль который будет формировать окно
 ### И логику программы и передаватся в модули
-ldap_server = '' #'ldap://s-kiev-r03.uvk.ua'
-bind_dn =  '' #'CN=Администратор Федчун Артем,OU=DOMAIN_ADMINS,OU=SYS,OU=GROUPS,OU=UVK,DC=uvk,DC=ua'
-bind_password = '' #'*YfM28~y9u'
-base_dn = '' #'OU=UVK,DC=uvk,DC=ua'
+# ldap_server = '' #'ldap://s-kiev-r03.uvk.ua'
+# bind_dn =  '' #'CN=Администратор Федчун Артем,OU=DOMAIN_ADMINS,OU=SYS,OU=GROUPS,OU=UVK,DC=uvk,DC=ua'
+# bind_password = '' #'*YfM28~y9u'
+# base_dn = '' #'OU=UVK,DC=uvk,DC=ua'
 # search_filter = '(&(objectClass=user)(cn=Fedchun Artem))'
 search_attributes = ['sAMAccountName', 'displayName', 'mail', 'telephonenumber']
 #static variables
