@@ -9,7 +9,8 @@ sys.path.append(parent_dir)
 from keylooker import key_looker as key # Импорт key_looker
 from keylooker import module as m
 from network_tester import tester as t # Предполагаем, что вы используете tester.py как основной
-
+from LDAP_app import LDAP_app as ld
+from LDAP_app import modules_ldap as ml
 
 class App(tk.Tk):
 
@@ -25,12 +26,16 @@ class App(tk.Tk):
 
         self.network_tester_window = None
         self.keylooker_window = None # Добавляем переменную для окна Keylooker
+        self.LDAP_window = None
 
         self.button = ttk.Button(self, text="Keylooker", command=lambda: self.on_button_click("Keylooker"))
         self.button.pack(pady=10)
         
-        self.button2 = ttk.Button(self, text="Network tester", command=lambda: self.on_button_click("Network Tester"))
+        self.button2 = ttk.Button(self, text="Network Tester", command=lambda: self.on_button_click("Network Tester"))
         self.button2.pack(pady=10)
+        
+        self.button3 = ttk.Button(self, text="LDAP", command=lambda: self.on_button_click("LDAP"))
+        self.button3.pack(pady=10)
         
         style = ttk.Style(self)
         style.configure("Custom.TLabel", background="grey", foreground="black", font=('Arial',12))
@@ -54,7 +59,7 @@ class App(tk.Tk):
             else:
                 self.keylooker_window.lift()
         
-        else:
+        elif button_name == "Network Tester":
             if self.network_tester_window is None or not self.network_tester_window.winfo_exists():
                 self.network_tester_window = t.Apl(self.root) 
                 self.network_tester_window.protocol("WM_DELETE_WINDOW", self.on_network_tester_close)
@@ -62,7 +67,23 @@ class App(tk.Tk):
                 self.network_tester_window.update_idletasks()
                 self.network_tester_window.update()
             self.network_tester_window.lift() 
-        self.log_message("Network Tester had closed")
+            self.log_message("Network Tester had closed")
+        else:
+            if self.LDAP_window is None or not self.network_tester_window.winfo_exists():
+                self.LDAP_window = ld.LD(self.root) 
+                self.LDAP_window.protocol("WM_DELETE_WINDOW", self.on_ldap_close)
+                
+                self.LDAP_window.update_idletasks()
+                self.LDAP_window.update()
+            self.LDAP_window.lift() 
+            self.log_message("LDAP had closed")
+    
+    def on_ldap_close(self):
+        
+        if self.LDAP_window is not None:
+            self.LDAP_window.destroy()
+            self.LDAP_window = None
+        self.deiconify()
     
     def on_network_tester_close(self):
 

@@ -23,7 +23,7 @@ class Apl(tk.Toplevel):
         self.log_file_name = "tester_log.log"
         self.log_pass = m.get_log_file_path(self.log_file_name)
         self.log_message("---Aplication Inicialized---")
-        self.title("Main window")
+        self.title("Network Tester")
         self.geometry("600x550")
         self.resizable(False, False)
         
@@ -87,7 +87,6 @@ class Apl(tk.Toplevel):
         self.log_message(f"{button_name} had closed")
     
     def get_resource_path(self, relative_path):
-       
         try:
             base_path = sys._MEIPASS
         except Exception:

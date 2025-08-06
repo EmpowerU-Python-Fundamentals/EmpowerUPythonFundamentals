@@ -13,10 +13,10 @@ from network_tester import tester as t
 # Параметры подключения
 ## Будут перенесены в основной модуль который будет формировать окно
 ### И логику программы и передаватся в модули
-ldap_server = 'ldap://s-kiev-r03.uvk.ua'
-bind_dn = 'CN=Администратор Федчун Артем,OU=DOMAIN_ADMINS,OU=SYS,OU=GROUPS,OU=UVK,DC=uvk,DC=ua'
-bind_password = '*YfM28~y9u'
-base_dn = 'OU=UVK,DC=uvk,DC=ua'
+ldap_server = '' #'ldap://s-kiev-r03.uvk.ua'
+bind_dn =  '' #'CN=Администратор Федчун Артем,OU=DOMAIN_ADMINS,OU=SYS,OU=GROUPS,OU=UVK,DC=uvk,DC=ua'
+bind_password = '' #'*YfM28~y9u'
+base_dn = '' #'OU=UVK,DC=uvk,DC=ua'
 # search_filter = '(&(objectClass=user)(cn=Fedchun Artem))'
 search_attributes = ['sAMAccountName', 'displayName', 'mail', 'telephonenumber']
 #static variables
@@ -58,6 +58,7 @@ def bind(l_s, l_i, b_dn, b_pass):
     except ldap.LDAPError as e:
         log_message(f"Произошла ошибка LDAP: {e}")
         print(f"Произошла ошибка LDAP: {e}")
+        sys.exit()
 
 def input_user_to_search():#username
     try:
@@ -134,6 +135,9 @@ def search_user_test(l_ll, bas_dn, search_attribut, dct):#user_name_input
                     lst1 = user_list
                     # print(f"  {attr}: {value[0].decode('utf-8')}")
                         # log_message(f"  {attr}: {value[0].decode('utf-8')}")
+            pars_list_in_dict(lst1)
+            return lst1
+                    
         else:
             print("Пользователь не найден. 😔")
             log_message("Пользователь не найден. 😔")
@@ -220,15 +224,19 @@ def close_bind(ll):
     else:
         log_message("-----Module For Warcking with LDAP Initialized-----")
 
-def pars_list_in_dict(list_to_dict):
-    lens = len(list_to_dict)
+def pars_list_in_dict(list_to_dic):
+    # lens = len(list_to_dict)
+    for i in list_to_dic:
+        print(f"{i} \n")
+
     
 
 if __name__ == "__main__":
     l = bind(ldap_server, l, bind_dn, bind_password)
     print(l)
+    
     search_info_dict = search_user_test(l, base_dn, search_attributes, search_info_dict)
     close_bind(l)
-    lens = len(search_info_dict)
-    print(search_info_dict)
-    print(lens)
+    pars_list_in_dict(search_info_dict)
+    # print(search_info_dict)
+    # print(lens)
