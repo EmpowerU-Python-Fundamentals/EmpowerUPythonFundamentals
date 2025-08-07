@@ -11,9 +11,10 @@ parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(parent_dir)
 
 from keylooker import module as m
-# from . import modules_ldap as m_l
-import modules_ldap as m_l
-import athorization as Oath
+from . import modules_ldap as m_l
+# import modules_ldap as m_l
+# import athorization as Oath
+from . import athorization as Oath
 
     
 class LD(tk.Toplevel):
@@ -25,12 +26,10 @@ class LD(tk.Toplevel):
         self.log_pass = m.get_log_file_path(self.log_file_name)
         self.config_file_name = "ldap_config.cfg"
         self.ldap_conf_pass = get_config_file_path(self.config_file_name)
+        print(self.ldap_conf_pass)
         self.ldap_conf_lines = ldap_conf_lines(self.ldap_conf_pass)
         self.log_message("---Aplication Inicialized---")
-        if self.ldap_conf_lines != 4:
-            ldap_athorization() 
-            """to write logic and authorization.py"""
-        m_l.bind()
+
         self.title("Ldap Module")
         self.geometry("600x550")
         self.resizable(False, False)
@@ -39,11 +38,21 @@ class LD(tk.Toplevel):
         style = ttk.Style(self)
         style.configure("Custom.TLabel", background="grey", foreground="black", font=('Arial',12))
         
+        if self.ldap_conf_lines != 4:
+            btn = tk.Button(self, text="Open Oath", command=lambda: self.open_oath_window(self.ldap_conf_pass))
+            btn.pack(pady=20)
+        else:
+            btn2 = tk.Button(self, text="Open OathChange", command=lambda: self.open_oathch_window(self.ldap_conf_pass))
+            btn2.pack(pady=20)
+        #TODO: write module to pars, OATH data from conf.file
+        btn1 = tk.Button(self, text="Connect LDAP", command=lambda: m_l.bind())
+        btn1.pack(pady=5)
+        #TODO: """to write logic and authorization.py"""
+        # m_l.bind()
+        
         main_frame = ttk.Frame(self, style="Custom.TLabel", relief="flat", borderwidth=0)
         main_frame.pack(expand=True, padx=20, pady=20)
         current_row = 0
-        
-        
         
         self.label = ttk.Label(main_frame, text="Type Username to search", style="Custom.TLabel")
         self.label.grid(row=current_row, column=0, columnspan=2, pady=(15, 5), sticky="n")
@@ -65,6 +74,14 @@ class LD(tk.Toplevel):
         current_row += 1
         main_frame.grid_rowconfigure(current_row-1, weight=1)
     
+    def open_oath_window(self, pas):
+        # Pass the main window (self) as the master
+        Oath.LDAuth(master=self, pas=pas)
+        
+    def open_oathch_window(self, pas):
+        # Pass the main window (self) as the master
+        Oath.LDAuthCh(master=self, pas=pas)
+
     def on_button_click(self, button_name):
         
         if button_name == "Search":
@@ -170,7 +187,7 @@ def get_config_file_path(cfg_file_name):
     if not os.path.exists(cfg_dir_path):
         os.makedirs(cfg_dir_path)
         
-    return os.path.join(cfg_dir_path, cfg_file_name)    
+    return os.path.join(cfg_dir_path, cfg_file_name)
 
 def ldap_conf_lines(cfg_file):
     try:
