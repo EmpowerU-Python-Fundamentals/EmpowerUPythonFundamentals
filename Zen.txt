@@ -115,3 +115,4 @@
 113  'AnnaKhrystiuk'
 114  'Namespaces are one honking great idea -- let's do more of those!'
 115  'Although never is often better than *right* now.'
+116  Explicit is better than implicit.
