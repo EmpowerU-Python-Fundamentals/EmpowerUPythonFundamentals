@@ -27,7 +27,12 @@ from defines import (
     LINK_ABOUT, LINK_PROFILE,
     BUTTON_COLOR_1, BUTTON_COLOR_2, BUTTON_COLOR_3, BUTTON_COLOR_4,
 )
+import sys
+import os
 
+if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+    os.chdir(sys._MEIPASS)
+    
             
 class SliderDisable(UISlider):
     def __init__(self, *args, **kwargs):
@@ -183,7 +188,7 @@ class MenuView(UIView):
         title = UILabel(
             text="Menu Screen",
             font_name=FONT,
-            font_size=32,
+            font_size=46,
             text_color=a.color.GRAY)
         self.grid.add(title, column=0, column_span=2, row=0)
         
@@ -386,7 +391,7 @@ class MenuView(UIView):
                     
     def start(self):   
         self.start_button = SideButton(
-            text="Start", font=FONT, font_size=30, size_hint=(1, 1))
+            text="Start", font=FONT, font_size=42, size_hint=(1, 1))
         self.grid.add(self.start_button, column=1, row=3)
         @self.start_button.event("on_click")
         def on_start(event):
@@ -455,7 +460,7 @@ class Synthesizer(a.View):
             UILabel(
                 text=f"{text}",
                 font_name=FONT,
-                font_size=32,
+                font_size=46,
                 text_color=a.color.GRAY),
             anchor_y="top",
             align_y=-150,
@@ -497,18 +502,18 @@ class Synthesizer(a.View):
     def create_diatonic(self, accuracy=-2, enabled=True):
         textures = self._get_textures("diatonic")
         self.create_sprites_with_labels(
-            notes=DIATONIC, textures=textures, accuracy=accuracy, font_size=30, enabled=enabled)     
+            notes=DIATONIC, textures=textures, accuracy=accuracy, font_size=40, enabled=enabled)     
         
     def create_chromatic(self, accuracy=-2, enabled=True):  
         textures = self._get_textures("chromatic")
         self.create_sprites_with_labels(
-            notes=CHROMATIC,  textures=textures, accuracy=accuracy, x=0.5, y=1, enabled=enabled) 
+            notes=CHROMATIC,  textures=textures, accuracy=accuracy, font_size=28, x=0.5, y=1, enabled=enabled) 
         
     def create_microtonal(self, accuracy=-2, enabled=True):   
         textures = self._get_textures("microtonal")
         self.create_sprites_with_labels(
             notes=MICROTONAL, textures=textures, accuracy=accuracy, 
-            x=0.25, y=0.5, x_offset=0.5, rotation=True, off=[4, 12], font_size=22,
+            x=0.25, y=0.5, x_offset=0.5, rotation=True, off=[4, 12], font_size=23,
             enabled=enabled)                    
     
     def _get_textures(self, name):

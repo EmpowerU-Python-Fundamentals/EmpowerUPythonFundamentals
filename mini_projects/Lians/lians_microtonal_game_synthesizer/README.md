@@ -48,3 +48,9 @@ python main.py
 
 You can download the latest Windows executable from the [Releases page](https://github.com/Lians-coder/microtonal_game_synthesizer/releases).  
 No installation needed — just run the `.exe`.  
+
+### Fonts
+
+- **Sunday Pasta** by Khurasan Studio - 100% free for personal and commercial use.  
+  License text in [assets/fonts/LICENSE-SundayPasta.txt](assets/fonts/LICENSE-Sunday-Pasta.txt).  
+- **Pianaforma** - © 2018 Michele Giordano, licensed under the [SIL Open Font License 1.1](assets/fonts/LICENSE-Pianaforma.txt), with Reserved Font Name “Pianaforma.”  
