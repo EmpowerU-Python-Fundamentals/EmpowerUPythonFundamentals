@@ -11,12 +11,9 @@ parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(parent_dir)
 
 from keylooker import module as m
-from . import modules_ldap as m_l
-# import modules_ldap as m_l
-# import athorization as Oath
-from . import athorization as Oath
+from . import modules_ldap as m_l 
+from . import athorization as Oath 
 
-    
 class LD(tk.Toplevel):
     
     def __init__(self, master=None):
@@ -26,12 +23,17 @@ class LD(tk.Toplevel):
         self.log_pass = m.get_log_file_path(self.log_file_name)
         self.config_file_name = "ldap_config.cfg"
         self.ldap_conf_pass = get_config_file_path(self.config_file_name)
+        
+        
         self.ldap_server = ''
-        self.bind_dn =  '' 
+        self.bind_dn = '' 
         self.bind_password = ''
         self.base_dn = ''
+        self.ldap_connection = None 
+        self.is_connected = False 
+
         self.ldap_conf_lines = ldap_conf_lines(self.ldap_conf_pass)
-        self.log_message("---Aplication Inicialized---")
+        self.log_message("---Application Initialized---")
 
         self.title("Ldap Module")
         self.geometry("600x550")
@@ -41,21 +43,35 @@ class LD(tk.Toplevel):
         style = ttk.Style(self)
         style.configure("Custom.TLabel", background="grey", foreground="black", font=('Arial',12))
         
+        
+        config_buttons_frame = ttk.Frame(self, style="Custom.TLabel", relief="flat", borderwidth=0)
+        config_buttons_frame.pack(pady=10)
+
         if self.ldap_conf_lines != 4:
-            btn = tk.Button(self, text="Open Oath", command=lambda: self.open_oath_window(self.ldap_conf_pass))
-            btn.pack(pady=20)
+            btn = tk.Button(config_buttons_frame, text="Open Oath", command=lambda: self.open_oath_window(self.ldap_conf_pass))
+            btn.pack(side=tk.LEFT, padx=5)
+            self.get_oath_data()
         else:
-            btn2 = tk.Button(self, text="Open OathChange", command=lambda: self.open_oathch_window(self.ldap_conf_pass))
-            btn2.pack(pady=20)
-        #TODO: write module to pars, OATH data from conf.file
-        btn1 = tk.Button(self, text="Connect LDAP", command=lambda: m_l.bind())
-        btn1.pack(pady=5)
-        #TODO: """to write logic and authorization.py"""
-        # m_l.bind()
+            btn2 = tk.Button(config_buttons_frame, text="Open OathChange", command=lambda: self.open_oathch_window(self.ldap_conf_pass))
+            btn2.pack(side=tk.LEFT, padx=5)
+            self.get_oath_data()
+        self.get_oath_data() 
+        self.connect_disconnect_button = tk.Button(self, 
+                                                   text="Connect LDAP", 
+                                                   command=self.toggle_ldap_connection,
+                                                   font=('Arial', 10), width=15, relief="raised")
+        self.connect_disconnect_button.pack(pady=5)
         
         main_frame = ttk.Frame(self, style="Custom.TLabel", relief="flat", borderwidth=0)
         main_frame.pack(expand=True, padx=20, pady=20)
-        current_row = 0
+        
+        
+        self.output_text = ScrolledText(main_frame, wrap=tk.WORD, height=10, width=50, font=('Arial', 10))
+        self.output_text.grid(row=3, column=0, columnspan=2, pady=10, sticky="nsew") 
+        main_frame.grid_rowconfigure(3, weight=1) 
+        main_frame.grid_columnconfigure(0, weight=1)
+        
+        current_row = 0 
         
         self.label = ttk.Label(main_frame, text="Type Username to search", style="Custom.TLabel")
         self.label.grid(row=current_row, column=0, columnspan=2, pady=(15, 5), sticky="n")
@@ -63,54 +79,148 @@ class LD(tk.Toplevel):
         
         self.entry = ttk.Entry(main_frame)
         self.entry.grid(row=current_row, column=0, columnspan=2, pady=5, sticky="ew")
-        self.entry.bind("<Return>", lambda event: self.on_button_click("Search"))  # Добавляем обработчик нажатия Enter
+        self.entry.bind("<Return>", lambda event: self.on_button_click("Search"))
         current_row += 1
         
         self.button = tk.Button(main_frame, text="Search", command=lambda: self.on_button_click("Search"),
-                                font=('Arial', 10), width=10, relief="raised") # Добавим шрифт, ширину и рельеф
+                                 font=('Arial', 10), width=10, relief="raised")
         self.button.grid(row=current_row, column=0, columnspan=2, pady=5, sticky="n")
         current_row += 1
-        main_frame.grid_columnconfigure(0, weight=1)
-        
-        self.output_text = ScrolledText(main_frame, wrap=tk.WORD, height=10, width=50, font=('Arial', 10))
-        self.output_text.grid(row=current_row, column=0, columnspan=2, pady=10, sticky="nsew")
-        current_row += 1
-        main_frame.grid_rowconfigure(current_row-1, weight=1)
+        self.label.grid(row=0, column=0, columnspan=2, pady=(15, 5), sticky="n")
+        self.entry.grid(row=1, column=0, columnspan=2, pady=5, sticky="ew")
+        self.button.grid(row=2, column=0, columnspan=2, pady=5, sticky="n")
+        main_frame.grid_columnconfigure(0, weight=1) 
     
+    def get_oath_data(self):
+        """Loads LDAP configuration data from file."""
+        try:
+            with open(self.ldap_conf_pass, 'r', encoding='utf-8') as conf_f:
+                lines = conf_f.readlines()
+                if len(lines) >= 4:
+                    self.ldap_server = lines[0].replace('LDAP server: ', '').strip()
+                    self.bind_dn = lines[1].replace('Bind DN: ', '').strip()
+                    self.bind_password = lines[2].replace('Bind Password: ', '').strip()
+                    self.base_dn = lines[3].replace('Base DN: ', '').strip()
+                    
+                    print(f"LDAP Configuration Loaded:")
+                    print(f"LDAP Server: {self.ldap_server}")
+                    print(f"Bind DN: {self.bind_dn}")
+                    print(f"Bind Password: {'*' * len(self.bind_password)}") 
+                    print(f"Base DN: {self.base_dn}")
+                    self.log_message("LDAP configuration loaded successfully.")
+                    self.update_connect_button_state() 
+                    return self.ldap_server, self.bind_dn, self.bind_password, self.base_dn
+                else:
+                    print("Configuration file has fewer than 4 lines. Incomplete data.")
+                    self.log_message("Configuration file incomplete.")
+                    self.update_connect_button_state() 
+                    return False
+        except FileNotFoundError:
+            print(f"Configuration file {self.ldap_conf_pass} not found. Will prompt for new config.")
+            self.log_message(f"Configuration file {self.ldap_conf_pass} not found.")
+            self.update_connect_button_state() 
+            return False
+        except Exception as e:
+            print(f"Error loading configuration: {e}")
+            self.log_message(f"Error loading configuration: {e}")
+            self.update_connect_button_state() 
+            return False
+        
     def open_oath_window(self, pas):
-        # Pass the main window (self) as the master
-        Oath.LDAuth(master=self, pas=pas)
+        
+        Oath.LDAuth(master=self, pas=pas) 
+        
+        self.update_connect_button_state() 
         
     def open_oathch_window(self, pas):
-        # Pass the main window (self) as the master
         Oath.LDAuthCh(master=self, pas=pas)
+        
+        self.update_connect_button_state() 
+
+    def update_connect_button_state(self):
+        """Updates the state of the Connect/Disconnect button based on loaded config."""
+        
+        if self.ldap_server and self.bind_dn and self.bind_password and self.base_dn:
+            self.connect_disconnect_button.config(state=tk.NORMAL) 
+        else:
+            self.connect_disconnect_button.config(state=tk.DISABLED) 
+            self.output_text.insert(tk.END, "LDAP configuration incomplete. Please set up via 'Open Oath'/'Open OathChange'.\n")
+            self.log_message("LDAP configuration incomplete.")
+
+    def toggle_ldap_connection(self):
+        """Toggles the LDAP connection state."""
+        self.output_text.delete(1.0, tk.END) 
+
+        if not self.is_connected:
+            
+            self.output_text.insert(tk.END, "Attempting to connect to LDAP...\n")
+            self.log_message("Attempting to connect to LDAP.")
+            try:
+                
+                
+                print(f"Connecting to LDAP server: {self.ldap_server}")
+                self.output_text.insert(tk.END, f"Connecting to LDAP server: {self.ldap_server}\n")
+                print(f"Bind DN: {self.bind_dn}")
+                self.output_text.insert(tk.END, f"Bind DN: {self.bind_dn}\n")
+                print(f"Bind Password: {'*' * len(self.bind_password)}") 
+                self.output_text.insert(tk.END, f"Bind Password: {'*' * len(self.bind_password)}\n")    
+                print(f"Base DN: {self.base_dn}")
+                self.output_text.insert(tk.END, f"Base DN: {self.base_dn}\n")
+                self.ldap_connection = m_l.bind(self.ldap_server, self.bind_dn, self.bind_password) 
+                
+                if self.ldap_connection: 
+                    self.is_connected = True
+                    self.connect_disconnect_button.config(text="Disconnect LDAP", command=self.toggle_ldap_connection)
+                    self.output_text.insert(tk.END, "LDAP connection successful! ✅\n")
+                    self.log_message("LDAP connection successful.")
+                else:
+                    self.output_text.insert(tk.END, "LDAP connection failed. Check credentials/server. ❌\n")
+                    self.log_message("LDAP connection failed.")
+                    
+            except Exception as e:
+                self.output_text.insert(tk.END, f"Error connecting to LDAP: {e} ❌\n")
+                self.log_message(f"Error connecting to LDAP: {e}")
+                
+
+        else:
+            
+            self.output_text.insert(tk.END, "Attempting to disconnect from LDAP...\n")
+            self.log_message("Attempting to disconnect from LDAP.")
+            try:
+                if self.ldap_connection:
+                    m_l.close_bind(self.ldap_connection) 
+                
+                self.is_connected = False
+                self.ldap_connection = None 
+                self.connect_disconnect_button.config(text="Connect LDAP", command=self.toggle_ldap_connection)
+                self.output_text.insert(tk.END, "LDAP disconnected successfully! 🔌\n")
+                self.log_message("LDAP disconnected successfully.")
+            except Exception as e:
+                self.output_text.insert(tk.END, f"Error disconnecting from LDAP: {e}\n")
+                self.log_message(f"Error disconnecting from LDAP: {e}")
+                
+
+        self.output_text.see(tk.END)
 
     def on_button_click(self, button_name):
-        
         if button_name == "Search":
             self.label.config(text=f"{button_name} Started")
             self.log_message(f"{button_name} Started")
-            self.on_search_click()
-        # else:
-        #     self.label1.config(text=f"{button_name} Started")
-        #     self.log_message(f"{button_name} Started")
-        #     self.on_trace_click()
-        self.log_message(f"{button_name} had closed")
+            self.on_search_click() 
+            self.log_message(f"{button_name} had closed")
 
     def get_resource_path(self, relative_path):
         try:
             base_path = sys._MEIPASS
         except Exception:
             base_path = os.path.dirname(os.path.abspath(__file__))
-
         return os.path.join(base_path, relative_path)
 
     def config_messagge(self,message):
-        
         """ Writes config to the specified config file. """
         try:
             with open(self.ldap_conf_pass, 'a', encoding='utf-8') as conf_f:
-                conf_f.write(message)
+                conf_f.write(message + '\n') 
         except Exception as e:
             print(f"Error writing to conf file: {e}")
 
@@ -122,72 +232,77 @@ class LD(tk.Toplevel):
             self.output_text.insert(tk.END, "Please enter username.\n")
             self.log_message("Username not provided.")
             return
+        
+        if not self.is_connected:
+            self.output_text.insert(tk.END, "Not connected to LDAP. Please connect first.\n")
+            self.log_message("Search attempt failed: Not connected to LDAP.")
+            return
 
-        self.output_text.insert(tk.END, f"Searchung {username}...\n")
+        self.output_text.insert(tk.END, f"Searching {username}...\n") 
         self.log_message(f"Searching {username}")
-        search_result = m_l.search_user_test(username)
-
-    
-
+        
         try:
-            process = subprocess.Popen(command, 
-                                     stdout=subprocess.PIPE, 
-                                     stderr=subprocess.PIPE, 
-                                     universal_newlines=True, 
-                                     encoding=target_encoding, 
-                                     errors='replace') 
-            stdout, stderr = process.communicate(timeout=10)
-
-            if stdout:
-                self.output_text.insert(tk.END, stdout)
-                self.log_message(f"Ping {ip} successful:\n{stdout}")
-            if stderr:
-                self.output_text.insert(tk.END, f"Error:\n{stderr}")
-                self.log_message(f"Ping {ip} error:\n{stderr}")
-
-            if process.returncode == 0:
-                self.output_text.insert(tk.END, f"\nPing to {ip} successful.\n")
+            
+            search_result = m_l.search_user_test(self.ldap_connection, username, self.base_dn) 
+            
+            if search_result:
+                for dn, entry in search_result:
+                    self.output_text.insert(tk.END, f"Found: {dn.decode('utf-8')}\n")
+                    for attr, value in entry.items():
+                        self.output_text.insert(tk.END, f"  {attr}: {value[0].decode('utf-8')}\n")
+                self.output_text.insert(tk.END, "\nSearch complete.\n")
             else:
-                self.output_text.insert(tk.END, f"\nPing to {ip} failed with code {process.returncode}.\n")
+                self.output_text.insert(tk.END, f"User '{username}' not found.\n")
+            self.log_message(f"Search for {username} completed.")
 
-        except subprocess.TimeoutExpired:
-            process.kill()
-            stdout, stderr = process.communicate()
-            try:
-                stdout_str = stdout.decode(target_encoding, errors='replace')
-                stderr_str = stderr.decode(target_encoding, errors='replace')
-            except Exception: 
-                stdout_str = str(stdout) 
-                stderr_str = str(stderr)
-
-            self.output_text.insert(tk.END, f"Ping to {ip} timed out.\nOutput (if any):\n{stdout_str}\nErrors (if any):\n{stderr_str}\n")
-            self.log_message(f"Ping to {ip} timed out.")
-        except FileNotFoundError:
-            self.output_text.insert(tk.END, "Ping command not found. Make sure it's in your system's PATH.\n")
-            self.log_message("Ping command not found.")
         except Exception as e:
-            self.output_text.insert(tk.END, f"An unexpected error occurred: {e}\n")
-            self.log_message(f"Ping to {ip} unexpected error: {e}")
+            self.output_text.insert(tk.END, f"An error occurred during search: {e}\n")
+            self.log_message(f"Error during search for {username}: {e}")
         
         self.output_text.see(tk.END)
 
     def log_message(self,message):
-    #""" Writes a timestamped message to the specified config file. """
+        """ Writes a timestamped message to the specified log file. """
         try:
             with open(self.log_pass, 'a', encoding='utf-8') as log_f:
                 log_f.write(f"{m.date_time()}:{message}\n")
         except Exception as e:
             print(f"Error writing to log file: {e}")
 
-    # def get_oath_data(self):
-    #     try:
-    #         with open(self.ldap_conf_pass, 'a', encoding='utf-8') as conf_f:
-    #             self.ldap_server = 
-    #             self.bind_dn =  
-    #             self.bind_password = 
-    #             self.base_dn = 
-    #     except:
-    #         pass
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+                    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 def get_config_file_path(cfg_file_name):
     cfg_directory_name = "config"
@@ -205,17 +320,17 @@ def get_config_file_path(cfg_file_name):
 def ldap_conf_lines(cfg_file):
     try:
         with open(cfg_file, 'r', encoding='utf-8') as cfg_f:
-            line_count = int(0)
-            for line in cfg_f:
+            line_count = 0
+            for _ in cfg_f: 
                 line_count += 1
             return line_count
-    # except FileNotFoundError as fe:
-    #     LD().log_message(fe)
-    except: 
-        pass    
+    except FileNotFoundError:
+        return 0 
+    except Exception as e: 
+        print(f"Error counting lines in config file: {e}")
+        return 0 
 
 def run_standalone_tester():
-    
     root_for_standalone = tk.Tk()
     root_for_standalone.withdraw() 
 
@@ -226,7 +341,6 @@ def run_standalone_tester():
     root_for_standalone.mainloop() 
 
 def on_standalone_close(toplevel_window, root_window):
-
     toplevel_window.destroy()
     root_window.destroy()
 

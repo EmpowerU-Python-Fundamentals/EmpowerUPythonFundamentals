@@ -43,45 +43,56 @@ def create_dict():
 
 log_message("-----Module For Warcking with LDAP Initialized-----")
 
-def bind(l_s, l_i, b_dn, b_pass):
-    try:
-        print("Инициализация соединения...")
-        log_message("Инициализация соединения...")
-        l_i = ldap.initialize(l_s)
-        l_i.set_option(ldap.OPT_REFERRALS, 0)
-        print("Попытка аутентификации...")
-        log_message("Попытка аутентификации...")
-        l_i.simple_bind_s(b_dn, b_pass)
-        print("Аутентификация прошла успешно! ✅")
-        log_message("Аутентификация прошла успешно! ✅")
-        return l_i
-    except ldap.LDAPError as e:
-        log_message(f"Произошла ошибка LDAP: {e}")
-        print(f"Произошла ошибка LDAP: {e}")
-        sys.exit()
+# def bind(l_s, b_dn, b_pass):
+#     try:
+#         l_i = None
+#         print("Инициализация соединения...")
+#         log_message("Инициализация соединения...")
+#         l_i = ldap.initialize(l_s)
+#         l_i.set_option(ldap.OPT_REFERRALS, 0)
+#         print("Попытка аутентификации...")
+#         log_message("Попытка аутентификации...")
+#         l_i.simple_bind_s(b_dn, b_pass)
+#         print("Аутентификация прошла успешно! ✅")
+#         log_message("Аутентификация прошла успешно! ✅")
+#     except ldap.LDAPError as e:
+#         log_message(f"Произошла ошибка LDAP: {e}")
+#         print(f"Произошла ошибка LDAP: {e}")
+def bind(ldap_server_uri, bind_dn, bind_password):
 
-def input_user_to_search():#username
+    l = None
     try:
-        a = ""
-        x = ''
-        #x = user_name
-        x = input('Type name:')
-        x = x.split(' ')
-        print(x)
-        if len(x) <= 2: 
-            for i in x:
-                if i.isalpha():
-                    i = i.upper()
-                    a += i + " "
-                else:
-                    raise Exception
-        else:
-            raise Exception
-        print(a)
-        a = a[:-1:]
-        a = a + '*))'
-        print(a)
-        return a
+        print("Инициализация соединения...") # Сообщение, которое вы видите в консоли
+        l = ldap.initialize(ldap_server_uri)
+        l.set_option(ldap.OPT_REFERRALS, 0) # Отключить следование за рефералами (часто полезно для AD)
+        l.set_option(ldap.OPT_PROTOCOL_VERSION, 3) # Использовать LDAPv3
+
+        print("Попытка аутентификации...") # Сообщение, которое вы видите в консоли
+        # Пароль часто требуется в байтах для simple_bind_s
+        l.simple_bind_s(bind_dn, bind_password.encode('utf-8')) 
+        
+        print("Аутентификация прошла успешно! ✅") # Сообщение, которое вы видите в консоли
+        return l # <-- КЛЮЧЕВОЙ МОМЕНТ: Возвращаем объект соединения при успехе
+    except ldap.INVALID_CREDENTIALS as e:
+        print(f"Ошибка LDAP: Неверные учетные данные: {e}")
+        if l:
+            l.unbind_s()
+        return None
+    except ldap.SERVER_DOWN as e:
+        print(f"Ошибка LDAP: Сервер недоступен: {e}")
+        if l:
+            l.unbind_s()
+        return None
+    except ldap.LDAPError as e:
+        print(f"Произошла ошибка LDAP: {e}")
+        if l:
+            l.unbind_s()
+        return None
+    except Exception as e:
+        print(f"Произошла непредвиденная ошибка: {e}")
+        if l:
+            l.unbind_s()
+        return None
             
     except Exception as e:
         print(f'Not Correct input: {e}')
@@ -94,9 +105,8 @@ def search_user_test(l_ll, bas_dn, search_attribut, dct):#user_name_input
         log_message("Попытка поиска...")
         # search_filter = '(&(objectClass=user)(cn=Fedchun Artem))'
         search_filter = '(&(objectClass=user)(cn=*'
-        search_filter += input_user_to_search()
+        search_filter += search_attribut()
         print(search_filter)
-        # print(type(search_filter))
         h = "\\"
         counter = 0
         result_set = l_ll.search_s(bas_dn, ldap.SCOPE_SUBTREE, search_filter, search_attribut)
@@ -153,60 +163,6 @@ def search_user_test(l_ll, bas_dn, search_attribut, dct):#user_name_input
         print(f"Error {e}")
         log_message(f"Error {e}")
 
-def search_user(l_ll, bas_dn, search_filt, search_attribut, dct): #search_filt = 'Surname Name))'
-    try:
-        print("Попытка поиска...")
-        log_message("Попытка поиска...")
-        # search_filter = '(&(objectClass=user)(cn=Fedchun Artem))'
-        search_filter = '(&(objectClass=user)(cn=*'
-        search_filter += search_filt
-        print(search_filter)
-        h = "\\"
-        counter = 0
-        result_set = l_ll.search_s(bas_dn, ldap.SCOPE_SUBTREE, search_filter, search_attribut)
-        print(result_set)
-        log_message(f"Result of search {result_set}")
-        if result_set:
-            print("Пользователь найден! 🎉")
-            log_message("Пользователь найден! 🎉")
-            for dn, entry in result_set:
-                if dn is not None and entry:  # Проверяем, что DN и entry не пустые
-                    f_i = dn.split(',')
-                    f_i = f_i[-3::-1]
-                    for i in f_i:
-                        c = ''
-                        c += f"{i}\\"
-                        c = c[3::]
-                        h += c
-                        counter += 1
-                    f_i = h[:-1:]
-                    print(f"Distinguished Name: {f_i}")
-                    log_message(f"Distinguished Name: {f_i}")
-                    dct["Distinguished Name"] = f_i
-                    for attr, value in entry.items():
-                        if value:
-                            print(f"  {attr}: {value[0].decode('utf-8')}")
-                            log_message(f"  {attr}: {value[0].decode('utf-8')}")
-                            dct[attr] = value[0].decode('utf-8')
-                        else:
-                            print(f"  {attr}: (значение отсутствует)")
-                            log_message(f"  {attr}: {value[0].decode('utf-8')}")
-                            
-                        # print(f"  {attr}: {value[0].decode('utf-8')}")
-                        # log_message(f"  {attr}: {value[0].decode('utf-8')}")
-        else:
-            print("Пользователь не найден. 😔")
-            log_message("Пользователь не найден. 😔")
-        return dct
-
-    except ldap.LDAPError as e:
-        print(f"Произошла ошибка LDAP: {e}")
-        log_message(f"Произошла ошибка LDAP: {e}")
-        
-    except Exception as e:
-        print(f"Error {e}")
-        log_message(f"Error {e}")
-
 def create_user():
     pass
 
@@ -217,26 +173,13 @@ def search_group():
     pass
 
 def close_bind(ll):
-    if ll:
         ll.unbind_s()
+        ll = None
         log_message("Соединение закрыто. 👋")
         print("Соединение закрыто. 👋")
-    else:
-        log_message("-----Module For Warcking with LDAP Initialized-----")
 
 def pars_list_in_dict(list_to_dic):
-    # lens = len(list_to_dict)
     for i in list_to_dic:
         print(f"{i} \n")
 
     
-
-if __name__ == "__main__":
-    l = bind(ldap_server, l, bind_dn, bind_password)
-    print(l)
-    
-    search_info_dict = search_user_test(l, base_dn, search_attributes, search_info_dict)
-    close_bind(l)
-    pars_list_in_dict(search_info_dict)
-    # print(search_info_dict)
-    # print(lens)

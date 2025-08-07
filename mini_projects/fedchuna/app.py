@@ -6,9 +6,9 @@ from tkinter import ttk
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(parent_dir)
 
-from keylooker import key_looker as key # Импорт key_looker
+from keylooker import key_looker as key 
 from keylooker import module as m
-from network_tester import tester as t # Предполагаем, что вы используете tester.py как основной
+from network_tester import tester as t 
 from LDAP_app import LDAP_app as ld
 from LDAP_app import modules_ldap as ml
 
@@ -25,7 +25,7 @@ class App(tk.Tk):
         background_lable.place(x=0, y=0, relwidth=1, relheight=1)
 
         self.network_tester_window = None
-        self.keylooker_window = None # Добавляем переменную для окна Keylooker
+        self.keylooker_window = None 
         self.LDAP_window = None
 
         self.button = ttk.Button(self, text="Keylooker", command=lambda: self.on_button_click("Keylooker"))
@@ -93,7 +93,7 @@ class App(tk.Tk):
             self.network_tester_window = None
         self.deiconify()
         self.log_message("Network tester Closed. Main window restored.")
-        # self.label.config(text=f"{self.bindbutton_name} Started")
+        
 
 
     def on_keylooker_close(self):
