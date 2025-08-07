@@ -34,3 +34,17 @@ Whether you're a music theory geek, ear training enthusiast, or just curious abo
    End-of-game summary includes:
      - Total correct answers.
      - Accuracy breakdown per note.
+
+## 🚀 Usage
+
+### Running from source
+
+```bash
+pip install -r requirements.txt
+python main.py
+```
+
+### 🔽 Download
+
+You can download the latest Windows executable from the [Releases page](https://github.com/Lians-coder/microtonal_game_synthesizer/releases).  
+No installation needed — just run the `.exe`.  
