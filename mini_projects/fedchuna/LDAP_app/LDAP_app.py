@@ -26,7 +26,10 @@ class LD(tk.Toplevel):
         self.log_pass = m.get_log_file_path(self.log_file_name)
         self.config_file_name = "ldap_config.cfg"
         self.ldap_conf_pass = get_config_file_path(self.config_file_name)
-        print(self.ldap_conf_pass)
+        self.ldap_server = ''
+        self.bind_dn =  '' 
+        self.bind_password = ''
+        self.base_dn = ''
         self.ldap_conf_lines = ldap_conf_lines(self.ldap_conf_pass)
         self.log_message("---Aplication Inicialized---")
 
@@ -176,6 +179,16 @@ class LD(tk.Toplevel):
         except Exception as e:
             print(f"Error writing to log file: {e}")
 
+    # def get_oath_data(self):
+    #     try:
+    #         with open(self.ldap_conf_pass, 'a', encoding='utf-8') as conf_f:
+    #             self.ldap_server = 
+    #             self.bind_dn =  
+    #             self.bind_password = 
+    #             self.base_dn = 
+    #     except:
+    #         pass
+
 def get_config_file_path(cfg_file_name):
     cfg_directory_name = "config"
     if getattr(sys, 'frozen', False):
@@ -200,7 +213,6 @@ def ldap_conf_lines(cfg_file):
     #     LD().log_message(fe)
     except: 
         pass    
-
 
 def run_standalone_tester():
     
