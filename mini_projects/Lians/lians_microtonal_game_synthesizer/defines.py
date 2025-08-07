@@ -1,4 +1,6 @@
 import arcade 
+import pyglet
+import os
 
 # --- Window ---
 
@@ -31,7 +33,12 @@ SPRITE_STEP  = 160
 SPRITE_ANGLE = 5
 
 # --- Fonts ---
-# TODO load fonts from assets
+
+font_path      = os.path.join(os.getcwd(), "assets", "fonts", "CASTELAR.TTF")
+font_menu_path = os.path.join(os.getcwd(), "assets", "fonts", "AGENCYR.TTF")
+pyglet.font.add_file(font_path)
+pyglet.font.add_file(font_menu_path)
+
 FONT      = "Castellar"
 FONT_MENU = "Agency FB"
 
@@ -54,6 +61,7 @@ LINK_PROFILE = "https://github.com/Lians-coder"
 BUTTON_COLOR_1 = arcade.color.LEMON_CURRY
 BUTTON_COLOR_2 = arcade.color.JASMINE
 BUTTON_COLOR_3 = arcade.color.FLORAL_WHITE
+BUTTON_COLOR_4 = arcade.color.BISTRE
 
 # --- Colors ---
 
