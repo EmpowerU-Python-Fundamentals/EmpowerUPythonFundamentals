@@ -1,0 +1,21 @@
+class Human:
+    def __init__(self, name):
+        self.name = name
+
+    def welcome(self):
+        return f"Welcome, {self.name}!"
+
+    @classmethod
+    def species_info(cls):
+        return "This is a species of Homo sapiens."
+
+    @staticmethod
+    def arbitrary_message():
+        return "Have a great day!"
+
+
+# Приклад
+person = Human("Alice")
+print(person.welcome())
+print(Human.species_info())
+print(Human.arbitrary_message())
