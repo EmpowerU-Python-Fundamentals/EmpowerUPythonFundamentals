@@ -25,7 +25,7 @@ class Human:
     species = 'Homosapiens'
     
     def __init__(self, name):
-        self.name = name 
+        self.name = name
     
     def greeting(self):
         """
@@ -34,21 +34,21 @@ class Human:
         return f'Hi, {self.name}, nice to meet you!'
     
     @classmethod
-    def spec(cls):
+    def human_species(cls):
         """
         Returns a string indicating the species of the human.
         """
         return f'You are {cls.species}.'
     
     @staticmethod
-    def random_message():
+    def chech_staticmethod_message():
         """
         Returns a random message as a string.
         """
-        return 'This is a random message ;)'
+        return 'This message checks the static method.'
     
     def __str__(self):
-        return f'{self.greeting()}\n{self.spec()}\n{self.random_message()}'
+        return f'{self.greeting()}\n{self.human_species()}\n{self.chech_staticmethod_message()}'
 
 
 while True:
