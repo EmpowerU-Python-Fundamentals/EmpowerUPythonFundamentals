@@ -1,4 +1,7 @@
 import arcade 
+import pyglet
+import os
+import sys
 
 # --- Window ---
 
@@ -31,9 +34,22 @@ SPRITE_STEP  = 160
 SPRITE_ANGLE = 5
 
 # --- Fonts ---
-# TODO load fonts from assets
-FONT      = "Castellar"
-FONT_MENU = "Agency FB"
+def resource_path(relative_path):
+    """ Get absolute path to resource (works for dev and for PyInstaller) """
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+        base_path = sys._MEIPASS          # Running in a PyInstaller bundle
+    else:
+        base_path = os.path.abspath(".")  # Running in normal development
+    return os.path.join(base_path, relative_path)
+
+font_path      = resource_path("assets/fonts/Sunday Pasta.ttf")
+font_menu_path = resource_path("assets/fonts/Pianaforma.ttf")
+
+pyglet.font.add_file(font_path)
+pyglet.font.add_file(font_menu_path)
+
+FONT      = "Sunday Pasta"
+FONT_MENU = "Pianaforma"
 
 # --- Game settings ---
 
@@ -46,7 +62,7 @@ ANSWERS = []
 
 # --- Links ---
 
-LINK_ABOUT   = "https://github.com/Lians-coder/microtonal_game_synthesizer/readme.md"
+LINK_ABOUT   = "https://github.com/Lians-coder/microtonal_game_synthesizer/blob/main/README.md"
 LINK_PROFILE = "https://github.com/Lians-coder"
 
 # --- Button colors ---
@@ -54,6 +70,7 @@ LINK_PROFILE = "https://github.com/Lians-coder"
 BUTTON_COLOR_1 = arcade.color.LEMON_CURRY
 BUTTON_COLOR_2 = arcade.color.JASMINE
 BUTTON_COLOR_3 = arcade.color.FLORAL_WHITE
+BUTTON_COLOR_4 = arcade.color.BISTRE
 
 # --- Colors ---
 

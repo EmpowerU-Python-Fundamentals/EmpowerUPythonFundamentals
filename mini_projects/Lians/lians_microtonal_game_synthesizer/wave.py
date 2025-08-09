@@ -26,7 +26,3 @@ def play_note(note, scale_dict=FREQ, octave_modifiers=[1, 2, 4]):
 
 
 set_frequencies(A)
-
-# play_note("A")
-# play_note("C")
-# play_note("E")
