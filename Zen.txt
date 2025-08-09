@@ -116,3 +116,6 @@
 114  'Namespaces are one honking great idea -- let's do more of those!'
 115  'Although never is often better than *right* now.'
 116  Explicit is better than implicit.
+117  'TEZv' 
+118  Special cases aren't special enough to break the rules.
+119  Although practicality beats purity.
