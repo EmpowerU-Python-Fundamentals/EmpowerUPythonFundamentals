@@ -28,6 +28,7 @@ class LD(tk.Toplevel):
         self.bind_password = ''
         self.base_dn = ''
         self.filter = ''
+        self.filter_for_group = ''
         self.ldap_connection = None 
         self.is_connected = False 
 
@@ -61,7 +62,7 @@ class LD(tk.Toplevel):
         config_buttons_frame = ttk.Frame(self, style="Custom.TLabel", relief="flat", borderwidth=0)
         config_buttons_frame.pack(pady=10)
 
-        if self.ldap_conf_lines != 5:
+        if self.ldap_conf_lines != 6:
             btn = tk.Button(config_buttons_frame, text="Создать конфиг", command=lambda: self.open_config_window(is_change=False))
             btn.pack(side=tk.LEFT, padx=5)
         else:
@@ -90,12 +91,13 @@ class LD(tk.Toplevel):
         try:
             with open(self.ldap_conf_pass, 'r', encoding='utf-8') as conf_f:
                 lines = conf_f.readlines()
-                if len(lines) == 5:
+                if len(lines) == 6:
                     self.ldap_server = lines[0].replace('LDAP server: ', '').strip()
                     self.bind_dn = lines[1].replace('Bind DN: ', '').strip()
                     self.bind_password = lines[2].replace('Bind Password: ', '').strip()
                     self.base_dn = lines[3].replace('Base DN: ', '').strip()
                     self.filter = lines[4].replace('Filter: ', '').strip()
+                    self.filter_for_group = lines[5].replace('Filter for Group: ', '').strip()
                     
                     print("LDAP Configuration Loaded:")
                     print(f"  LDAP Server: {self.ldap_server}")
@@ -103,6 +105,7 @@ class LD(tk.Toplevel):
                     print(f"  Bind Password: {'*' * len(self.bind_password)}") 
                     print(f"  Base DN: {self.base_dn}")
                     print(f"  Filter: {self.filter}")
+                    print(f"  Filter for Group: {self.filter_for_group}")
                     self.log_message("LDAP configuration loaded successfully.")
                     self.update_connect_button_state() 
                     return True

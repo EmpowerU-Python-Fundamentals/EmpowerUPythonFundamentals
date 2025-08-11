@@ -29,7 +29,8 @@ class LDAPAuthConfigWindow(tk.Toplevel):
             'bind_dn': '',
             'bind_password': '',
             'base_dn': '',
-            'filter': ''
+            'filter': '',
+            'filter_for_group': ''
         }
 
         self.geometry("350x400")
@@ -67,6 +68,7 @@ class LDAPAuthConfigWindow(tk.Toplevel):
             "Password": ("Введите пароль для Bind", self._confirm_password),
             "Base_DN": ("Введите Base DN для поиска", self._confirm_base_dn),
             "Filter": ("Введите атрибуты (через запятую)", self._confirm_filter)
+            "Filter_for_group": ("Введите атрибуты для групп (через запятую)", self.confirm_filter_for_group)
         }
 
         for name, (text, command) in steps_info.items():
@@ -139,6 +141,17 @@ class LDAPAuthConfigWindow(tk.Toplevel):
             self.output_text.insert(tk.END, f"Фильтр установлен: {self.config_data['filter']}\n")
             self._hide_step("Filter")
             self._finish_and_save()
+    
+    def _confirm_filter_for_group(self):
+        value = self.widgets["Filter_for_group"][1].get().strip()
+        if not value:
+            self.output_text.insert(tk.END, "Атрибуты фильтра для групп не могут быть пустыми.\n")
+        else:
+            self.config_data['filter_for_group'] = value
+            self.output_text.insert(tk.END, f"Фильтр для групп установлен: {self.config_data['filter_for_group']}\n")
+            self._hide_step("Filter_for_group")
+            self._finish_and_save()
+
 
     def _finish_and_save(self):
         """Отображает итоговую информацию, сохраняет конфигурацию и закрывает окно."""
@@ -149,7 +162,8 @@ class LDAPAuthConfigWindow(tk.Toplevel):
         self.output_text.insert(tk.END, f"Bind Password: {'*' * len(self.config_data['bind_password'])}\n")
         self.output_text.insert(tk.END, f"Base DN: {self.config_data['base_dn']}\n")
         self.output_text.insert(tk.END, f"Filter: {self.config_data['filter']}\n")
-
+        self.output_text.insert(tk.END, f"Filter for Group: {self.config_data['filter_for_group']}\n")
+        
         self._save_config_to_file()
 
         done_button = tk.Button(self.main_frame, text="Done", command=self.destroy,
@@ -166,6 +180,7 @@ class LDAPAuthConfigWindow(tk.Toplevel):
                 f"Bind Password: {self.config_data['bind_password']}\n"
                 f"Base DN: {self.config_data['base_dn']}\n"
                 f"Filter: {self.config_data['filter']}\n"
+                f"Filter for Group: {self.config_data['filter_for_group']}\n"
             )
             with open(self.ldap_conf_pass, 'w', encoding='utf-8') as conf_f:
                 conf_f.write(config_content)

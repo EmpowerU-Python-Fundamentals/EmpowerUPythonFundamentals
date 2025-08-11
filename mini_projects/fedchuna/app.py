@@ -71,7 +71,8 @@ class App(tk.Tk):
                 self.network_tester_window.update()
             self.network_tester_window.lift() 
             self.log_message("Network Tester had closed")
-            if self.LDAP_window is None or not self.network_tester_window.winfo_exists():
+
+        elif button_name == "LDAP":
             if self.LDAP_window is None or not self.LDAP_window.winfo_exists():
                 self.LDAP_window = ld.LD(self.root) 
                 self.LDAP_window.protocol("WM_DELETE_WINDOW", self.on_ldap_close)
