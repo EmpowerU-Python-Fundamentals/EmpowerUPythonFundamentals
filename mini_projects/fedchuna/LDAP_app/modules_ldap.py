@@ -69,49 +69,41 @@ def bind(ldap_server_uri, bind_dn, bind_password):
         if l:
             l.unbind_s()
         return None
-            
-def search_user_test(ldap_connection_object, base_dn, search_filter_string, search_attributes_list):
+
+def search(ldap_connection_object, base_dn, search_filter_string, search_attributes_list):
     """
-    Performs an LDAP search for a user.
-    
-    Args:
-        ldap_connection_object (ldap.LDAPObject): An active LDAP connection object.
-        base_dn (str): The base Distinguished Name (DN) for the search.
-        search_filter_string (str): The LDAP filter string (e.g., "(&(objectClass=user)(cn=John*))").
-        search_attributes_list (list): A list of strings representing attributes to retrieve.
-        
-    Returns:
-        list: A list of tuples (dn, entry) for found users, or an empty list.
+    Performs an LDAP search operation.
+
+    Returns a list of result tuples (dn, entry_dict).
     """
+
     if not ldap_connection_object:
         print("Ошибка: LDAP соединение не установлено для поиска.")
         log_message("Error: LDAP connection not established for search.")
         return []
-        
+
     try:
         print("Попытка поиска...")
         log_message("Попытка поиска...")
-        
-        # Perform the LDAP search
-        # Arguments for search_s: base, scope, filterstr, attrlist
+
         result_set = ldap_connection_object.search_s(
-            base_dn,             # Argument 1: The base DN (string)
-            ldap.SCOPE_SUBTREE,  # Argument 2: The search scope (constant for subtree search)
-            search_filter_string, # Argument 3: The LDAP filter string (string)
-            search_attributes_list # Argument 4: The list of attributes to return (list of strings)
+            base_dn,
+            ldap.SCOPE_SUBTREE,
+            search_filter_string,
+            search_attributes_list
         )
-        
+
         print(f"Result of search: {result_set}")
         log_message(f"Result of search: {result_set}")
-        
+
         if result_set:
-            print("Пользователь найден! 🎉")
-            log_message("Пользователь найден! 🎉")
-            return result_set # Return the raw result_set for processing in LDAP_app.py
+            print("Записи найдены! 🎉")
+            log_message("Записи найдены! 🎉")
+            return result_set
         else:
-            print("Пользователь не найден. �")
+            print("Записи не найдены. 😔")
             log_message("Пользователь не найден. 😔")
-            return [] # Return empty list if no user found
+            return []
 
     except ldap.LDAPError as e:
         print(f"Произошла ошибка LDAP при поиске: {e}")
@@ -122,15 +114,6 @@ def search_user_test(ldap_connection_object, base_dn, search_filter_string, sear
         log_message(f"Unexpected error during search: {e}")
         return []
 
-# These functions are not used 
-# def create_user():
-#     pass
-
-# def cerate_group():
-#     pass
-
-# def search_group():
-#     pass
 
 def close_bind(ldap_connection_object):
     """

@@ -74,7 +74,7 @@ class App(tk.Tk):
 
         elif button_name == "LDAP":
             if self.LDAP_window is None or not self.LDAP_window.winfo_exists():
-                self.LDAP_window = ld.LD(self.root) 
+                self.LDAP_window = ld.LD(self.root)
                 self.LDAP_window.protocol("WM_DELETE_WINDOW", self.on_ldap_close)
                 
                 self.LDAP_window.update_idletasks()

@@ -67,8 +67,8 @@ class LDAPAuthConfigWindow(tk.Toplevel):
             "LDAP_DN": ("Введите Bind DN", self._confirm_dn),
             "Password": ("Введите пароль для Bind", self._confirm_password),
             "Base_DN": ("Введите Base DN для поиска", self._confirm_base_dn),
-            "Filter": ("Введите атрибуты (через запятую)", self._confirm_filter)
-            "Filter_for_group": ("Введите атрибуты для групп (через запятую)", self.confirm_filter_for_group)
+            "Filter": ("Введите атрибуты (через запятую)", self._confirm_filter),
+            "Filter_for_group": ("Введите атрибуты для групп (через запятую)", self._confirm_filter_for_group)
         }
 
         for name, (text, command) in steps_info.items():

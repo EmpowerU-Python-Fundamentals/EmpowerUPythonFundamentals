@@ -47,7 +47,8 @@ class LD(tk.Toplevel):
         self.main_frame.pack(expand=True, padx=20, pady=20)
         
         self.output_text = ScrolledText(self.main_frame, wrap=tk.WORD, height=10, width=50, font=('Arial', 10))
-        self.output_text.grid(row=5, column=0, columnspan=2, pady=10, sticky="nsew") 
+        self.output_text.tag_configure("h1", font=("Arial", 11, "bold"))
+        self.output_text.grid(row=6, column=0, columnspan=2, pady=10, sticky="nsew") 
         self.main_frame.grid_rowconfigure(5, weight=1) 
         self.main_frame.grid_columnconfigure(0, weight=1) 
 
@@ -57,7 +58,7 @@ class LD(tk.Toplevel):
                                                    font=('Arial', 10), width=15, relief="raised")
         self.connect_disconnect_button.pack(pady=5)
         
-        self.get_oath_data() 
+        self.get_oath_data()
         
         config_buttons_frame = ttk.Frame(self, style="Custom.TLabel", relief="flat", borderwidth=0)
         config_buttons_frame.pack(pady=10)
@@ -85,7 +86,37 @@ class LD(tk.Toplevel):
         self.button.grid(row=current_row, column=0, columnspan=2, pady=5, sticky="n")
         current_row += 1
         self.main_frame.grid_columnconfigure(0, weight=1) 
-    
+        
+        self.label1 = ttk.Label(self.main_frame, text="Введите имя группы для поиска", style="Custom.TLabel")
+        self.label1.grid(row=current_row, column=0, columnspan=2, pady=(15, 5), sticky="n")
+        current_row += 1
+        
+        self.entry1 = ttk.Entry(self.main_frame)
+        self.entry1.grid(row=current_row, column=0, columnspan=2, pady=5, sticky="ew")
+        self.entry1.bind("<Return>", lambda event: self.on_button_click("Search_group"))
+        current_row += 1
+        
+        self.button1 = tk.Button(self.main_frame, text="Поиск", command=lambda: self.on_button_click("Search_group"),
+                                 font=('Arial', 10), width=10, relief="raised")
+        self.button1.grid(row=current_row, column=0, columnspan=2, pady=5, sticky="n")
+        current_row += 1
+        self.main_frame.grid_columnconfigure(0, weight=1) 
+        
+    def _extract_cn(self, dn_string: str) -> str:
+        """Извлекает значение CN из строки DN."""
+        try:
+            cn_part = dn_string.split(',')[0]
+            if cn_part.upper().startswith('CN='):
+                return cn_part[3:]
+        except Exception:
+            pass
+        return dn_string
+
+    def _decode_ldap_value(self, value: any) -> str:
+        if isinstance(value, bytes):
+            return value.decode('utf-8', 'replace')
+        return str(value) if value is not None else ''
+
     def get_oath_data(self):
         """Загружает данные конфигурации LDAP из файла."""
         try:
@@ -190,9 +221,16 @@ class LD(tk.Toplevel):
 
     def on_button_click(self, button_name):
         if button_name == "Search":
-            self.label.config(text=f"Выполняется {button_name}...")
+            self.label.config(text=f"Выполняется поиск пользователя...")
             self.log_message(f"{button_name} Started")
             self.on_search_click() 
+            self.label.config(text="Введите имя пользователя для поиска")
+            self.log_message(f"{button_name} had closed")
+        elif button_name == "Search_group":
+            self.label1.config(text=f"Выполняется поиск группы...")
+            self.log_message(f"{button_name} Started")
+            self.on_search_group_click()    
+            self.label1.config(text="Введите имя группы для поиска")
             self.log_message(f"{button_name} had closed")
 
     def on_search_click(self):
@@ -219,13 +257,13 @@ class LD(tk.Toplevel):
 
         search_attributes_list = [attr.strip() for attr in self.filter.split(',')] if self.filter else []
         if not search_attributes_list:
-            search_attributes_list = ['distinguishedName', 'cn', 'mail', 'sAMAccountName', 'description', 'telephoneNumber']
+            search_attributes_list = ['distinguishedName', 'cn', 'mail', 'sAMAccountName', 'description', 'telephoneNumber', 'memberOf']
             
-        self.output_text.insert(tk.END, f"Начинаем поиск для '{raw_username}' по атрибуту '{search_by_attribute}'...\n") 
+        self.output_text.insert(tk.END, f"Начинаем поиск для '{raw_username}'...\n\n") 
         self.log_message(f"Searching for '{raw_username}' by attribute '{search_by_attribute}' with filter: '{search_filter_string}'")
         
         try:
-            search_result = m_l.search_user_test(
+            search_result = m_l.search(
                 self.ldap_connection, 
                 self.base_dn, 
                 search_filter_string, 
@@ -233,28 +271,102 @@ class LD(tk.Toplevel):
             ) 
             
             if search_result:
-                self.output_text.insert(tk.END, "Поиск успешно завершен. Найдены следующие результаты:\n")
+                self.output_text.insert(tk.END, "Поиск успешно завершен. Найдены следующие результаты:\n\n")
                 for dn, entry in search_result:
-                    decoded_dn = dn.decode('utf-8') if isinstance(dn, bytes) else str(dn)
-                    self.output_text.insert(tk.END, f"  Найден: {decoded_dn}\n") 
-                    for attr, value in entry.items():
-                        if isinstance(value, list) and len(value) > 0:
-                            decoded_value = value[0].decode('utf-8') if isinstance(value[0], bytes) else str(value[0])
-                            self.output_text.insert(tk.END, f"    {attr}: {decoded_value}\n")
+                    decoded_dn = self._decode_ldap_value(dn)
+                    user_cn = self._extract_cn(decoded_dn)
+
+                    self.output_text.insert(tk.END, f"Пользователь: {user_cn}\n", "h1")
+                    
+                    for attr_bytes in sorted(entry.keys()):
+                        attr = self._decode_ldap_value(attr_bytes)
+                        values = entry[attr_bytes]
+                        if not values:
+                            continue
+
+                        if attr.lower() == 'memberof':
+                            self.output_text.insert(tk.END, "  Входит в группы:\n")
+                            for member_dn_bytes in values:
+                                member_dn = self._decode_ldap_value(member_dn_bytes)
+                                self.output_text.insert(tk.END, f"    - {self._extract_cn(member_dn)}\n")
                         else:
-                            self.output_text.insert(tk.END, f"    {attr}: {value}\n")
+                            for value_bytes in values:
+                                self.output_text.insert(tk.END, f"  {attr}: {self._decode_ldap_value(value_bytes)}\n")
+                    self.output_text.insert(tk.END, "--------------------------------------------------\n\n")
                 self.output_text.insert(tk.END, "\nВсе результаты поиска отображены.\n")
             else:
                 self.output_text.insert(tk.END, f"Поиск завершен. Пользователь '{raw_username}' не найден.\n")
             self.log_message(f"Search for {raw_username} completed.")
-
         except Exception as e:
             self.output_text.insert(tk.END, f"!!! КРИТИЧЕСКАЯ ОШИБКА ПРИ ПОИСКЕ !!!\n")
             self.output_text.insert(tk.END, f"Тип ошибки: {type(e)}\n")
             self.output_text.insert(tk.END, f"Сообщение об ошибке: {e}\n")
             self.log_message(f"Критическая ошибка при поиске для {raw_username}: {e}")
         
+        self.entry.delete(0, tk.END)
         self.output_text.see(tk.END)
+
+    def on_search_group_click(self):
+        raw_group_name = self.entry1.get().strip() 
+        self.output_text.delete(1.0, tk.END)
+        if not raw_group_name:
+            self.output_text.insert(tk.END, "Пожалуйста, введите имя группы.\n")
+            self.log_message("Имя группы не предоставлено.")
+            return
+        if not self.is_connected:
+            self.output_text.insert(tk.END, "Нет подключения к LDAP. Пожалуйста, подключитесь сначала.\n")
+            self.log_message("Попытка поиска группы не удалась: не подключено к LDAP.")
+            return
+        search_by_attribute = "cn"
+        search_filter_string = f"(&(objectClass=group)({search_by_attribute}=*{raw_group_name}*))"
+        search_attributes_list = [attr.strip() for attr in self.filter_for_group.split(',')] if self.filter_for_group else []
+        if not search_attributes_list:
+            search_attributes_list = ['cn', 'description', 'member']
+        self.output_text.insert(tk.END, f"Начинаем поиск группы '{raw_group_name}'...\n\n")
+        self.log_message(f"Searching for group '{raw_group_name}' by attribute '{search_by_attribute}' with filter: '{search_filter_string}'")
+        try:
+            search_result = m_l.search(
+                self.ldap_connection, 
+                self.base_dn, 
+                search_filter_string, 
+                search_attributes_list
+            )
+            if search_result:
+                self.output_text.insert(tk.END, "Поиск успешно завершен. Найдены следующие результаты:\n\n")
+                for dn, entry in search_result:
+                    decoded_dn = self._decode_ldap_value(dn)
+                    group_cn = self._extract_cn(decoded_dn)
+                    
+                    self.output_text.insert(tk.END, f"Группа: {group_cn}\n", "h1")
+                    
+                    for attr_bytes in sorted(entry.keys()):
+                        attr = self._decode_ldap_value(attr_bytes)
+                        values = entry[attr_bytes]
+                        if not values:
+                            continue
+                        
+                        if attr.lower() == 'member':
+                            self.output_text.insert(tk.END, "  Участники:\n")
+                            for member_dn_bytes in values:
+                                member_dn = self._decode_ldap_value(member_dn_bytes)
+                                self.output_text.insert(tk.END, f"    - {self._extract_cn(member_dn)}\n")
+                        else:
+                            for value_bytes in values:
+                                self.output_text.insert(tk.END, f"  {attr}: {self._decode_ldap_value(value_bytes)}\n")
+                    
+                    self.output_text.insert(tk.END, "--------------------------------------------------\n\n")
+                self.output_text.insert(tk.END, "\nВсе результаты поиска групп отображены.\n")
+            else:
+                self.output_text.insert(tk.END, f"Поиск завершен. Группа '{raw_group_name}' не найдена.\n")
+            self.log_message(f"Search for group {raw_group_name} completed.")
+        except Exception as e:
+            self.output_text.insert(tk.END, f"!!! КРИТИЧЕСКАЯ ОШИБКА ПРИ ПОИСКЕ ГРУППЫ !!!\n")
+            self.output_text.insert(tk.END, f"Тип ошибки: {type(e)}\n")
+            self.output_text.insert(tk.END, f"Сообщение об ошибке: {e}\n")
+            self.log_message(f"Критическая ошибка при поиске группы для {raw_group_name}: {e}")
+        self.output_text.see(tk.END)
+        self.entry1.delete(0, tk.END)
+
 
     def log_message(self,message):
         """Записывает сообщение с меткой времени в лог-файл."""
