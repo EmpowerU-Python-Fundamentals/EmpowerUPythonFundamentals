@@ -2,665 +2,203 @@ import os
 import sys
 from tkinter.scrolledtext import ScrolledText
 import tkinter as tk
-from tkinter import ttk 
+from tkinter import ttk
 
+ 
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(parent_dir)
 
 from keylooker import module as m
-from . import modules_ldap as m_l 
-from . import athorization as Oath 
 
-class LDAuth(tk.Toplevel):
-    
-    def __init__(self, master=None, pas=None):
+class LDAPAuthConfigWindow(tk.Toplevel):
+
+
+    def __init__(self, master=None, pas=None, change_config=False):
         super().__init__(master)
-        self.root = self
-        self.log_file_name = "ldap.log"
-        self.log_pass = m.get_log_file_path(self.log_file_name)
-        self.config_file_name = "ldap_config.cfg"
         self.ldap_conf_pass = pas
-        print(pas)
-        self.ldap_server = 'ldap://' 
-        self.bind_dn = '' 
-        self.bind_password = ''
-        self.base_dn = ''
-        self.filter = '' 
-        self.title("LDAP OAUth")
-        self.geometry("350x350") 
+
+        if change_config:
+            self.title("Изменение конфигурации LDAP")
+            self._delete_config_file()
+        else:
+            self.title("Новая конфигурация LDAP")
+
+
+        self.config_data = {
+            'ldap_server': 'ldap://',
+            'bind_dn': '',
+            'bind_password': '',
+            'base_dn': '',
+            'filter': ''
+        }
+
+        self.geometry("350x400")
         self.resizable(False, False)
         self.config(bg="grey")
-        
+
         style = ttk.Style(self)
-        style.configure("Custom.TLabel", background="grey", foreground="black", font=('Arial',10)) 
-        
-        main_frame = ttk.Frame(self, style="Custom.TLabel", relief="flat", borderwidth=0)
-        main_frame.pack(expand=True, padx=10, pady=10) 
-        
-        self.label = ttk.Label(main_frame, text="Type ldap_server", style="Custom.TLabel")
-        self.entry = ttk.Entry(main_frame)
-        self.button = tk.Button(main_frame, text="Confirm", command=lambda: self.on_button_click("Ldap_server_Confirm"),
-                                 font=('Arial', 9), width=8, relief="raised")
-        self.entry.bind("<Return>", lambda event: self.on_button_click("Ldap_server_Confirm"))
+        style.configure("Custom.TLabel", background="grey", foreground="black", font=('Arial', 10))
 
-        self.label1 = ttk.Label(main_frame, text="Type ldap_DN", style="Custom.TLabel")
-        self.entry1 = ttk.Entry(main_frame)
-        self.button1 = tk.Button(main_frame, text="Confirm", command=lambda: self.on_button_click("LDAP_DN_Confirm"),
-                                 font=('Arial', 9), width=8, relief="raised")
-        self.entry1.bind("<Return>", lambda event: self.on_button_click("LDAP_DN_Confirm"))
+        self.main_frame = ttk.Frame(self, style="Custom.TLabel", relief="flat", borderwidth=0)
+        self.main_frame.pack(expand=True, padx=10, pady=10)
 
-        self.label2 = ttk.Label(main_frame, text="Type admin ldap password", style="Custom.TLabel")
-        self.entry2 = ttk.Entry(main_frame, show="*") 
-        self.button2 = tk.Button(main_frame, text="Confirm", command=lambda: self.on_button_click("Password_Confirm"),
-                                 font=('Arial', 9), width=8, relief="raised")
-        self.entry2.bind("<Return>", lambda event: self.on_button_click("Password_Confirm"))
 
-        self.label3 = ttk.Label(main_frame, text="Type Ldap Base DN", style="Custom.TLabel") 
-        self.entry3 = ttk.Entry(main_frame)
-        self.button3 = tk.Button(main_frame, text="Confirm", command=lambda: self.on_button_click("Base_DN_Confirm"),
-                                 font=('Arial', 9), width=8, relief="raised")
-        self.entry3.bind("<Return>", lambda event: self.on_button_click("Base_DN_Confirm"))
-        
-        # Corrected label text for the filter input
-        self.label4 = ttk.Label(main_frame, text="Type Ldap Filter", style="Custom.TLabel") 
-        self.entry4 = ttk.Entry(main_frame)
-        self.button4 = tk.Button(main_frame, text="Confirm", command=lambda: self.on_button_click("Filter_Confirm"),
-                                 font=('Arial', 9), width=8, relief="raised")
-        self.entry4.bind("<Return>", lambda event: self.on_button_click("Filter_Confirm"))
-        
-        self.output_text1 = ScrolledText(main_frame, wrap=tk.WORD, height=5, width=40, font=('Arial', 9))
+        self.widgets = {}
+        self._create_widgets()
 
-        
-        self.label.grid(row=0, column=0, columnspan=2, pady=(5, 2), sticky="n")
-        self.entry.grid(row=1, column=0, columnspan=2, pady=2, sticky="ew")
-        self.button.grid(row=2, column=0, columnspan=2, pady=2, sticky="n")
-        
-        
-        self.output_text1.grid(row=3, column=0, columnspan=2, pady=5, sticky="nsew")
-        main_frame.grid_rowconfigure(3, weight=1) 
-        main_frame.grid_columnconfigure(0, weight=1)
+        self.output_text = ScrolledText(self.main_frame, wrap=tk.WORD, height=5, width=40, font=('Arial', 9))
+        self.output_text.grid(row=3, column=0, columnspan=2, pady=5, sticky="nsew")
+        self.main_frame.grid_rowconfigure(3, weight=1)
+        self.main_frame.grid_columnconfigure(0, weight=1)
+
+        self._show_step("Ldap_server")
+
+
         self.grab_set()
         self.focus_set()
         self.transient(master)
         self.wait_window()
-    def config_messagge(self,message):
-        
-        """ Writes config to the specified config file. """
+
+    def _create_widgets(self):
+        """Создает и хранит все виджеты для шагов мастера."""
+        steps_info = {
+            "Ldap_server": ("Введите LDAP Server", self._confirm_server),
+            "LDAP_DN": ("Введите Bind DN", self._confirm_dn),
+            "Password": ("Введите пароль для Bind", self._confirm_password),
+            "Base_DN": ("Введите Base DN для поиска", self._confirm_base_dn),
+            "Filter": ("Введите атрибуты (через запятую)", self._confirm_filter)
+        }
+
+        for name, (text, command) in steps_info.items():
+            label = ttk.Label(self.main_frame, text=text, style="Custom.TLabel")
+            entry = ttk.Entry(self.main_frame, show="*" if name == "Password" else "")
+            button = tk.Button(self.main_frame, text="Confirm", command=command,
+                               font=('Arial', 9), width=8, relief="raised")
+            entry.bind("<Return>", lambda event, cmd=command: cmd())
+            self.widgets[name] = (label, entry, button)
+
+    def _show_step(self, name):
+        """Отображает виджеты для указанного шага."""
+        label, entry, button = self.widgets[name]
+        label.grid(row=0, column=0, columnspan=2, pady=(5, 2), sticky="n")
+        entry.grid(row=1, column=0, columnspan=2, pady=2, sticky="ew")
+        button.grid(row=2, column=0, columnspan=2, pady=2, sticky="n")
+        entry.focus_set()
+
+    def _hide_step(self, name):
+        """Скрывает виджеты для указанного шага."""
+        for widget in self.widgets[name]:
+            widget.grid_forget()
+
+    def _confirm_server(self):
+        value = self.widgets["Ldap_server"][1].get().strip()
+        if not value:
+            self.output_text.insert(tk.END, "LDAP server не может быть пустым.\n")
+        else:
+            self.config_data['ldap_server'] = 'ldap://' + value
+            self.output_text.insert(tk.END, f"LDAP server установлен: {self.config_data['ldap_server']}\n")
+            self._hide_step("Ldap_server")
+            self._show_step("LDAP_DN")
+
+    def _confirm_dn(self):
+        value = self.widgets["LDAP_DN"][1].get().strip()
+        if not value:
+            self.output_text.insert(tk.END, "Bind DN не может быть пустым.\n")
+        else:
+            self.config_data['bind_dn'] = value
+            self.output_text.insert(tk.END, "Bind DN установлен.\n")
+            self._hide_step("LDAP_DN")
+            self._show_step("Password")
+
+    def _confirm_password(self):
+        value = self.widgets["Password"][1].get().strip()
+        if not value:
+            self.output_text.insert(tk.END, "Пароль не может быть пустым.\n")
+        else:
+            self.config_data['bind_password'] = value
+            self.output_text.insert(tk.END, "Пароль установлен.\n")
+            self._hide_step("Password")
+            self._show_step("Base_DN")
+
+    def _confirm_base_dn(self):
+        value = self.widgets["Base_DN"][1].get().strip()
+        if not value:
+            self.output_text.insert(tk.END, "Base DN не может быть пустым.\n")
+        else:
+            self.config_data['base_dn'] = value
+            self.output_text.insert(tk.END, "Base DN установлен.\n")
+            self._hide_step("Base_DN")
+            self._show_step("Filter")
+
+    def _confirm_filter(self):
+        value = self.widgets["Filter"][1].get().strip()
+        if not value:
+            self.output_text.insert(tk.END, "Атрибуты фильтра не могут быть пустыми.\n")
+        else:
+            self.config_data['filter'] = value
+            self.output_text.insert(tk.END, f"Фильтр установлен: {self.config_data['filter']}\n")
+            self._hide_step("Filter")
+            self._finish_and_save()
+
+    def _finish_and_save(self):
+        """Отображает итоговую информацию, сохраняет конфигурацию и закрывает окно."""
+        self.output_text.delete(1.0, tk.END)
+        self.output_text.insert(tk.END, "Конфигурация завершена!\n\n")
+        self.output_text.insert(tk.END, f"LDAP Server: {self.config_data['ldap_server']}\n")
+        self.output_text.insert(tk.END, f"Bind DN: {self.config_data['bind_dn']}\n")
+        self.output_text.insert(tk.END, f"Bind Password: {'*' * len(self.config_data['bind_password'])}\n")
+        self.output_text.insert(tk.END, f"Base DN: {self.config_data['base_dn']}\n")
+        self.output_text.insert(tk.END, f"Filter: {self.config_data['filter']}\n")
+
+        self._save_config_to_file()
+
+        done_button = tk.Button(self.main_frame, text="Done", command=self.destroy,
+                                font=('Arial', 9), width=8, relief="raised")
+        done_button.grid(row=4, column=0, columnspan=2, pady=10)
+        self.output_text.grid(row=0, column=0, columnspan=2, pady=5, sticky="nsew", rowspan=4)
+
+    def _save_config_to_file(self):
+        """Записывает всю собранную конфигурацию в файл, перезаписывая его."""
         try:
-            with open(self.ldap_conf_pass, 'a', encoding='utf-8') as conf_f:
-                conf_f.write(message)
+            config_content = (
+                f"LDAP server: {self.config_data['ldap_server']}\n"
+                f"Bind DN: {self.config_data['bind_dn']}\n"
+                f"Bind Password: {self.config_data['bind_password']}\n"
+                f"Base DN: {self.config_data['base_dn']}\n"
+                f"Filter: {self.config_data['filter']}\n"
+            )
+            with open(self.ldap_conf_pass, 'w', encoding='utf-8') as conf_f:
+                conf_f.write(config_content)
+            self.output_text.insert(tk.END, "\nКонфигурация успешно сохранена.\n")
         except Exception as e:
-            print(f"Error writing to conf file: {e}")
-        
-    def on_button_click(self, button_type):
-            
-            
-        self.output_text1.delete(1.0, tk.END) 
-        self.oath_data = list()
-        if button_type == "Ldap_server_Confirm":
-            ldap_server_value = self.entry.get().strip()
-            if not ldap_server_value:
-                self.output_text1.insert(tk.END, "LDAP server wasn't entered\n")
-            else:
-                self.ldap_server = 'ldap://' + ldap_server_value
-                self.config_messagge(f"LDAP server: {self.ldap_server}\n")
-                self.output_text1.insert(tk.END, f"LDAP server set to: {self.ldap_server}\n")
-                self.oath_data.append(f"ldap_server: {self.ldap_server}")
+            print(f"Ошибка записи в файл конфигурации: {e}")
+            self.output_text.insert(tk.END, f"\nОшибка сохранения конфигурации: {e}\n")
 
-                
-                self.label.grid_forget()
-                self.entry.grid_forget()
-                self.button.grid_forget()
-
-                
-                self.label1.grid(row=0, column=0, columnspan=2, pady=(5, 2), sticky="n")
-                self.entry1.grid(row=1, column=0, columnspan=2, pady=2, sticky="ew")
-                self.button1.grid(row=2, column=0, columnspan=2, pady=2, sticky="n")
-                
-                
-                self.output_text1.grid(row=3, column=0, columnspan=2, pady=5, sticky="nsew")
-
-
-        elif button_type == "LDAP_DN_Confirm":
-            bind_dn_value = self.entry1.get().strip()
-            if not bind_dn_value:
-                self.output_text1.insert(tk.END, "CN DN wasn't entered\n")
-            else:
-                self.bind_dn = bind_dn_value
-                self.config_messagge(f"Bind DN: {self.bind_dn}\n")
-                self.output_text1.insert(tk.END, f"LDAP DN set to: {self.bind_dn}\n")
-                self.oath_data.append(f"bind_dn: {self.bind_dn}")
-
-                
-                self.label1.grid_forget()
-                self.entry1.grid_forget()
-                self.button1.grid_forget()
-
-                
-                self.label2.grid(row=0, column=0, columnspan=2, pady=(5, 2), sticky="n")
-                self.entry2.grid(row=1, column=0, columnspan=2, pady=2, sticky="ew")
-                self.button2.grid(row=2, column=0, columnspan=2, pady=2, sticky="n")
-
-                self.output_text1.grid(row=3, column=0, columnspan=2, pady=5, sticky="nsew")
-
-
-        elif button_type == "Password_Confirm":
-            bind_password_value = self.entry2.get().strip()
-            if not bind_password_value:
-                self.output_text1.insert(tk.END, "Your password is empty\n")
-            else:
-                self.bind_password = bind_password_value
-                self.config_messagge(f"Bind Password: {self.bind_password}\n")
-                self.output_text1.insert(tk.END, f"Password set\n")
-                self.oath_data.append(f"bind_password: {self.bind_password}")
-
-                
-                self.label2.grid_forget()
-                self.entry2.grid_forget()
-                self.button2.grid_forget()
-
-                
-                self.label3.grid(row=0, column=0, columnspan=2, pady=(5, 2), sticky="n")
-                self.entry3.grid(row=1, column=0, columnspan=2, pady=2, sticky="ew")
-                self.button3.grid(row=2, column=0, columnspan=2, pady=2, sticky="n")
-
-                self.output_text1.grid(row=3, column=0, columnspan=2, pady=5, sticky="nsew")
-
-
-        elif button_type == "Base_DN_Confirm":
-            base_dn_value = self.entry3.get().strip()
-            if not base_dn_value:
-                self.output_text1.insert(tk.END, "Base domain name and OU not entered\n")
-            else:
-                self.base_dn = base_dn_value
-                self.config_messagge(f"Base DN: {self.base_dn}\n")
-                self.output_text1.insert(tk.END, f"Base DN set to: {self.base_dn}\n")
-                self.oath_data.append(f"base_dn: {self.base_dn}")
-
-                
-                self.label3.grid_forget()
-                self.entry3.grid_forget()
-                self.button3.grid_forget()
-                
-                # Show next set (Filter)
-                self.label4.grid(row=0, column=0, columnspan=2, pady=(5, 2), sticky="n")
-                self.entry4.grid(row=1, column=0, columnspan=2, pady=2, sticky="ew")
-                self.button4.grid(row=2, column=0, columnspan=2, pady=2, sticky="n")
-
-                self.output_text1.grid(row=3, column=0, columnspan=2, pady=5, sticky="nsew")
-
-
-        elif button_type == "Filter_Confirm":
-            filter_value = self.entry4.get().strip()
-            if not filter_value:
-                self.output_text1.insert(tk.END, "Filter not entered\n")
-            else:
-                self.filter = filter_value
-                self.config_messagge(f"Filter: {self.filter}\n")
-                self.output_text1.insert(tk.END, f"Filter set to: {self.filter}\n")
-                self.oath_data.append(f"filter: {self.filter}")
-
-                self.label4.grid_forget()
-                self.entry4.grid_forget()
-                self.button4.grid_forget()
-                
-                self.output_text1.insert(tk.END, "\nAll LDAP configuration data collected!\n")
-                self.output_text1.insert(tk.END, f"LDAP Server: {self.ldap_server}\n")
-                self.output_text1.insert(tk.END, f"Bind DN: {self.bind_dn}\n")
-                self.output_text1.insert(tk.END, f"Bind Password: {'*' * len(self.bind_password)}\n") 
-                self.output_text1.insert(tk.END, f"Base DN: {self.base_dn}\n")
-                self.output_text1.insert(tk.END, f"Filter: {self.filter}\n")
-                
-                self.done_button = tk.Button(self.root, text="Done", command=self.destroy, 
-                                                     font=('Arial', 9), width=8, relief="raised")
-                self.done_button.pack(pady=10) 
-
-                self.output_text1.grid(row=0, column=0, columnspan=2, pady=5, sticky="nsew") 
-
-        self.output_text1.see(tk.END)
-    
-class LDAuthCh(tk.Toplevel):
-    def __init__(self, master=None, pas=None):
-        super().__init__(master)
-        self.root = self
-        self.log_file_name = "ldap.log"
-        self.log_pass = m.get_log_file_path(self.log_file_name)
-        self.config_file_name = "ldap_config.cfg"
-        self.ldap_conf_pass = pas
-        self.del_folder()
-        print(pas)
-        self.ldap_server = 'ldap://' 
-        self.bind_dn = '' 
-        self.bind_password = ''
-        self.base_dn = ''
-        self.filter = '' 
-        self.title("LDAP OAUth")
-        self.geometry("350x350") 
-        self.resizable(False, False)
-        self.config(bg="grey")
-        
-        style = ttk.Style(self)
-        style.configure("Custom.TLabel", background="grey", foreground="black", font=('Arial',10)) 
-        
-        main_frame = ttk.Frame(self, style="Custom.TLabel", relief="flat", borderwidth=0)
-        main_frame.pack(expand=True, padx=10, pady=10) 
-        
-        self.label = ttk.Label(main_frame, text="Type ldap_server", style="Custom.TLabel")
-        self.entry = ttk.Entry(main_frame)
-        self.button = tk.Button(main_frame, text="Confirm", command=lambda: self.on_button_click("Ldap_server_Confirm"),
-                                 font=('Arial', 9), width=8, relief="raised")
-        self.entry.bind("<Return>", lambda event: self.on_button_click("Ldap_server_Confirm"))
-
-        self.label1 = ttk.Label(main_frame, text="Type ldap_DN", style="Custom.TLabel")
-        self.entry1 = ttk.Entry(main_frame)
-        self.button1 = tk.Button(main_frame, text="Confirm", command=lambda: self.on_button_click("LDAP_DN_Confirm"),
-                                 font=('Arial', 9), width=8, relief="raised")
-        self.entry1.bind("<Return>", lambda event: self.on_button_click("LDAP_DN_Confirm"))
-
-        self.label2 = ttk.Label(main_frame, text="Type admin ldap password", style="Custom.TLabel")
-        self.entry2 = ttk.Entry(main_frame, show="*") 
-        self.button2 = tk.Button(main_frame, text="Confirm", command=lambda: self.on_button_click("Password_Confirm"),
-                                 font=('Arial', 9), width=8, relief="raised")
-        self.entry2.bind("<Return>", lambda event: self.on_button_click("Password_Confirm"))
-
-        self.label3 = ttk.Label(main_frame, text="Type Ldap Base DN", style="Custom.TLabel") 
-        self.entry3 = ttk.Entry(main_frame)
-        self.button3 = tk.Button(main_frame, text="Confirm", command=lambda: self.on_button_click("Base_DN_Confirm"),
-                                 font=('Arial', 9), width=8, relief="raised")
-        self.entry3.bind("<Return>", lambda event: self.on_button_click("Base_DN_Confirm"))
-
-        # Corrected label text for the filter input
-        self.label4 = ttk.Label(main_frame, text="Type Ldap Filter", style="Custom.TLabel") 
-        self.entry4 = ttk.Entry(main_frame)
-        self.button4 = tk.Button(main_frame, text="Confirm", command=lambda: self.on_button_click("Filter_Confirm"),
-                                 font=('Arial', 9), width=8, relief="raised")
-        self.entry4.bind("<Return>", lambda event: self.on_button_click("Filter_Confirm"))
-    
-        self.output_text1 = ScrolledText(main_frame, wrap=tk.WORD, height=5, width=40, font=('Arial', 9))
-
-        
-        self.label.grid(row=0, column=0, columnspan=2, pady=(5, 2), sticky="n")
-        self.entry.grid(row=1, column=0, columnspan=2, pady=2, sticky="ew")
-        self.button.grid(row=2, column=0, columnspan=2, pady=2, sticky="n")
-        
-        
-        self.output_text1.grid(row=3, column=0, columnspan=2, pady=5, sticky="nsew")
-        main_frame.grid_rowconfigure(3, weight=1) 
-        main_frame.grid_columnconfigure(0, weight=1)
-        self.grab_set()
-        self.focus_set()
-        self.transient(master)
-        self.wait_window()
-    def config_messagge(self,message):
-        
-        """ Writes config to the specified config file. """
+    def _delete_config_file(self):
+        """Удаляет файл конфигурации, если он существует."""
         try:
-            with open(self.ldap_conf_pass, 'a', encoding='utf-8') as conf_f:
-                conf_f.write(message)
-        except Exception as e:
-            print(f"Error writing to conf file: {e}")
-        
-    def on_button_click(self, button_type):
-            
-            
-        self.output_text1.delete(1.0, tk.END) 
-        self.oath_data = list()
-        if button_type == "Ldap_server_Confirm":
-            ldap_server_value = self.entry.get().strip()
-            if not ldap_server_value:
-                self.output_text1.insert(tk.END, "LDAP server wasn't entered\n")
-            else:
-                self.ldap_server = 'ldap://' + ldap_server_value
-                self.config_messagge(f"LDAP server: {self.ldap_server}\n")
-                self.output_text1.insert(tk.END, f"LDAP server set to: {self.ldap_server}\n")
-                self.oath_data.append(f"ldap_server: {self.ldap_server}")
-
-                
-                self.label.grid_forget()
-                self.entry.grid_forget()
-                self.button.grid_forget()
-
-                
-                self.label1.grid(row=0, column=0, columnspan=2, pady=(5, 2), sticky="n")
-                self.entry1.grid(row=1, column=0, columnspan=2, pady=2, sticky="ew")
-                self.button1.grid(row=2, column=0, columnspan=2, pady=2, sticky="n")
-                
-                
-                self.output_text1.grid(row=3, column=0, columnspan=2, pady=5, sticky="nsew")
-
-
-        elif button_type == "LDAP_DN_Confirm":
-            bind_dn_value = self.entry1.get().strip()
-            if not bind_dn_value:
-                self.output_text1.insert(tk.END, "CN DN wasn't entered\n")
-            else:
-                self.bind_dn = bind_dn_value
-                self.config_messagge(f"Bind DN: {self.bind_dn}\n")
-                self.output_text1.insert(tk.END, f"LDAP DN set to: {self.bind_dn}\n")
-                self.oath_data.append(f"bind_dn: {self.bind_dn}")
-
-                
-                self.label1.grid_forget()
-                self.entry1.grid_forget()
-                self.button1.grid_forget()
-
-                
-                self.label2.grid(row=0, column=0, columnspan=2, pady=(5, 2), sticky="n")
-                self.entry2.grid(row=1, column=0, columnspan=2, pady=2, sticky="ew")
-                self.button2.grid(row=2, column=0, columnspan=2, pady=2, sticky="n")
-
-                self.output_text1.grid(row=3, column=0, columnspan=2, pady=5, sticky="nsew")
-
-
-        elif button_type == "Password_Confirm":
-            bind_password_value = self.entry2.get().strip()
-            if not bind_password_value:
-                self.output_text1.insert(tk.END, "Your password is empty\n")
-            else:
-                self.bind_password = bind_password_value
-                self.config_messagge(f"Bind Password: {self.bind_password}\n")
-                self.output_text1.insert(tk.END, f"Password set\n")
-                self.oath_data.append(f"bind_password: {self.bind_password}")
-
-                
-                self.label2.grid_forget()
-                self.entry2.grid_forget()
-                self.button2.grid_forget()
-
-                
-                self.label3.grid(row=0, column=0, columnspan=2, pady=(5, 2), sticky="n")
-                self.entry3.grid(row=1, column=0, columnspan=2, pady=2, sticky="ew")
-                self.button3.grid(row=2, column=0, columnspan=2, pady=2, sticky="n")
-
-                self.output_text1.grid(row=3, column=0, columnspan=2, pady=5, sticky="nsew")
-
-
-        elif button_type == "Base_DN_Confirm":
-            base_dn_value = self.entry3.get().strip()
-            if not base_dn_value:
-                self.output_text1.insert(tk.END, "Base domain name and OU not entered\n")
-            else:
-                self.base_dn = base_dn_value
-                self.config_messagge(f"Base DN: {self.base_dn}\n")
-                self.output_text1.insert(tk.END, f"Base DN set to: {self.base_dn}\n")
-                self.oath_data.append(f"base_dn: {self.base_dn}")
-
-                
-                self.label3.grid_forget()
-                self.entry3.grid_forget()
-                self.button3.grid_forget()
-                
-                # Show next set (Filter)
-                self.label4.grid(row=0, column=0, columnspan=2, pady=(5, 2), sticky="n")
-                self.entry4.grid(row=1, column=0, columnspan=2, pady=2, sticky="ew")
-                self.button4.grid(row=2, column=0, columnspan=2, pady=2, sticky="n")
-
-                self.output_text1.grid(row=3, column=0, columnspan=2, pady=5, sticky="nsew")
-
-
-        elif button_type == "Filter_Confirm":
-            filter_value = self.entry4.get().strip()
-            if not filter_value:
-                self.output_text1.insert(tk.END, "Filter not entered\n")
-            else:
-                self.filter = filter_value
-                self.config_messagge(f"Filter: {self.filter}\n")
-                self.output_text1.insert(tk.END, f"Filter set to: {self.filter}\n")
-                self.oath_data.append(f"filter: {self.filter}")
-
-                self.label4.grid_forget()
-                self.entry4.grid_forget()
-                self.button4.grid_forget()
-                
-                self.output_text1.insert(tk.END, "\nAll LDAP configuration data collected!\n")
-                self.output_text1.insert(tk.END, f"LDAP Server: {self.ldap_server}\n")
-                self.output_text1.insert(tk.END, f"Bind DN: {self.bind_dn}\n")
-                self.output_text1.insert(tk.END, f"Bind Password: {'*' * len(self.bind_password)}\n") 
-                self.output_text1.insert(tk.END, f"Base DN: {self.base_dn}\n")
-                self.output_text1.insert(tk.END, f"Filter: {self.filter}\n")
-                
-                self.done_button = tk.Button(self.root, text="Done", command=self.destroy, 
-                                                     font=('Arial', 9), width=8, relief="raised")
-                self.done_button.pack(pady=10) 
-
-                self.output_text1.grid(row=0, column=0, columnspan=2, pady=5, sticky="nsew") 
-
-        self.output_text1.see(tk.END)
-    
-class LDAuthCh(tk.Toplevel):
-    def __init__(self, master=None, pas=None):
-        super().__init__(master)
-        self.root = self
-        self.log_file_name = "ldap.log"
-        self.log_pass = m.get_log_file_path(self.log_file_name)
-        self.config_file_name = "ldap_config.cfg"
-        self.ldap_conf_pass = pas
-        self.del_folder()
-        print(pas)
-        self.ldap_server = 'ldap://' 
-        self.bind_dn = '' 
-        self.bind_password = ''
-        self.base_dn = ''
-        self.filter = '' 
-        self.title("LDAP OAUth")
-        self.geometry("350x350") 
-        self.resizable(False, False)
-        self.config(bg="grey")
-        
-        style = ttk.Style(self)
-        style.configure("Custom.TLabel", background="grey", foreground="black", font=('Arial',10)) 
-        
-        main_frame = ttk.Frame(self, style="Custom.TLabel", relief="flat", borderwidth=0)
-        main_frame.pack(expand=True, padx=10, pady=10) 
-        
-        self.label = ttk.Label(main_frame, text="Type ldap_server", style="Custom.TLabel")
-        self.entry = ttk.Entry(main_frame)
-        self.button = tk.Button(main_frame, text="Confirm", command=lambda: self.on_button_click("Ldap_server_Confirm"),
-                                 font=('Arial', 9), width=8, relief="raised")
-        self.entry.bind("<Return>", lambda event: self.on_button_click("Ldap_server_Confirm"))
-
-        self.label1 = ttk.Label(main_frame, text="Type ldap_DN", style="Custom.TLabel")
-        self.entry1 = ttk.Entry(main_frame)
-        self.button1 = tk.Button(main_frame, text="Confirm", command=lambda: self.on_button_click("LDAP_DN_Confirm"),
-                                 font=('Arial', 9), width=8, relief="raised")
-        self.entry1.bind("<Return>", lambda event: self.on_button_click("LDAP_DN_Confirm"))
-
-        self.label2 = ttk.Label(main_frame, text="Type admin ldap password", style="Custom.TLabel")
-        self.entry2 = ttk.Entry(main_frame, show="*") 
-        self.button2 = tk.Button(main_frame, text="Confirm", command=lambda: self.on_button_click("Password_Confirm"),
-                                 font=('Arial', 9), width=8, relief="raised")
-        self.entry2.bind("<Return>", lambda event: self.on_button_click("Password_Confirm"))
-
-        self.label3 = ttk.Label(main_frame, text="Type Ldap Base DN", style="Custom.TLabel") 
-        self.entry3 = ttk.Entry(main_frame)
-        self.button3 = tk.Button(main_frame, text="Confirm", command=lambda: self.on_button_click("Base_DN_Confirm"),
-                                 font=('Arial', 9), width=8, relief="raised")
-        self.entry3.bind("<Return>", lambda event: self.on_button_click("Base_DN_Confirm"))
-
-        # Corrected label text for the filter input
-        self.label4 = ttk.Label(main_frame, text="Type Ldap Filter", style="Custom.TLabel") 
-        self.entry4 = ttk.Entry(main_frame)
-        self.button4 = tk.Button(main_frame, text="Confirm", command=lambda: self.on_button_click("Filter_Confirm"),
-                                 font=('Arial', 9), width=8, relief="raised")
-        self.entry4.bind("<Return>", lambda event: self.on_button_click("Filter_Confirm"))
-    
-        self.output_text1 = ScrolledText(main_frame, wrap=tk.WORD, height=5, width=40, font=('Arial', 9))
-
-        
-        self.label.grid(row=0, column=0, columnspan=2, pady=(5, 2), sticky="n")
-        self.entry.grid(row=1, column=0, columnspan=2, pady=2, sticky="ew")
-        self.button.grid(row=2, column=0, columnspan=2, pady=2, sticky="n")
-        
-        
-        self.output_text1.grid(row=3, column=0, columnspan=2, pady=5, sticky="nsew")
-        main_frame.grid_rowconfigure(3, weight=1) 
-        main_frame.grid_columnconfigure(0, weight=1)
-        self.grab_set()
-        self.focus_set()
-        self.transient(master)
-        self.wait_window()
-    def config_messagge(self,message):
-        
-        """ Writes config to the specified config file. """
-        try:
-            with open(self.ldap_conf_pass, 'a', encoding='utf-8') as conf_f:
-                conf_f.write(message)
-        except Exception as e:
-            print(f"Error writing to conf file: {e}")
-        
-    def on_button_click(self, button_type):
-            
-            
-        self.output_text1.delete(1.0, tk.END) 
-        self.oath_data = list()
-        if button_type == "Ldap_server_Confirm":
-            ldap_server_value = self.entry.get().strip()
-            if not ldap_server_value:
-                self.output_text1.insert(tk.END, "LDAP server wasn't entered\n")
-            else:
-                self.ldap_server = 'ldap://' + ldap_server_value
-                self.config_messagge(f"LDAP server: {self.ldap_server}\n")
-                self.output_text1.insert(tk.END, f"LDAP server set to: {self.ldap_server}\n")
-                self.oath_data.append(f"ldap_server: {self.ldap_server}")
-
-                
-                self.label.grid_forget()
-                self.entry.grid_forget()
-                self.button.grid_forget()
-
-                
-                self.label1.grid(row=0, column=0, columnspan=2, pady=(5, 2), sticky="n")
-                self.entry1.grid(row=1, column=0, columnspan=2, pady=2, sticky="ew")
-                self.button1.grid(row=2, column=0, columnspan=2, pady=2, sticky="n")
-                
-                
-                self.output_text1.grid(row=3, column=0, columnspan=2, pady=5, sticky="nsew")
-
-
-        elif button_type == "LDAP_DN_Confirm":
-            bind_dn_value = self.entry1.get().strip()
-            if not bind_dn_value:
-                self.output_text1.insert(tk.END, "CN DN wasn't entered\n")
-            else:
-                self.bind_dn = bind_dn_value
-                self.config_messagge(f"Bind DN: {self.bind_dn}\n")
-                self.output_text1.insert(tk.END, f"LDAP DN set to: {self.bind_dn}\n")
-                self.oath_data.append(f"bind_dn: {self.bind_dn}")
-
-                
-                self.label1.grid_forget()
-                self.entry1.grid_forget()
-                self.button1.grid_forget()
-
-                
-                self.label2.grid(row=0, column=0, columnspan=2, pady=(5, 2), sticky="n")
-                self.entry2.grid(row=1, column=0, columnspan=2, pady=2, sticky="ew")
-                self.button2.grid(row=2, column=0, columnspan=2, pady=2, sticky="n")
-
-                self.output_text1.grid(row=3, column=0, columnspan=2, pady=5, sticky="nsew")
-
-
-        elif button_type == "Password_Confirm":
-            bind_password_value = self.entry2.get().strip()
-            if not bind_password_value:
-                self.output_text1.insert(tk.END, "Your password is empty\n")
-            else:
-                self.bind_password = bind_password_value
-                self.config_messagge(f"Bind Password: {self.bind_password}\n")
-                self.output_text1.insert(tk.END, f"Password set\n")
-                self.oath_data.append(f"bind_password: {self.bind_password}")
-
-                
-                self.label2.grid_forget()
-                self.entry2.grid_forget()
-                self.button2.grid_forget()
-
-                
-                self.label3.grid(row=0, column=0, columnspan=2, pady=(5, 2), sticky="n")
-                self.entry3.grid(row=1, column=0, columnspan=2, pady=2, sticky="ew")
-                self.button3.grid(row=2, column=0, columnspan=2, pady=2, sticky="n")
-
-                self.output_text1.grid(row=3, column=0, columnspan=2, pady=5, sticky="nsew")
-
-
-        elif button_type == "Base_DN_Confirm":
-            base_dn_value = self.entry3.get().strip()
-            if not base_dn_value:
-                self.output_text1.insert(tk.END, "Base domain name and OU not entered\n")
-            else:
-                self.base_dn = base_dn_value
-                self.config_messagge(f"Base DN: {self.base_dn}\n")
-                self.output_text1.insert(tk.END, f"Base DN set to: {self.base_dn}\n")
-                self.oath_data.append(f"base_dn: {self.base_dn}")
-
-                
-                self.label3.grid_forget()
-                self.entry3.grid_forget()
-                self.button3.grid_forget()
-                
-                # Show next set (Filter)
-                self.label4.grid(row=0, column=0, columnspan=2, pady=(5, 2), sticky="n")
-                self.entry4.grid(row=1, column=0, columnspan=2, pady=2, sticky="ew")
-                self.button4.grid(row=2, column=0, columnspan=2, pady=2, sticky="n")
-
-                self.output_text1.grid(row=3, column=0, columnspan=2, pady=5, sticky="nsew")
-
-
-        elif button_type == "Filter_Confirm":
-            filter_value = self.entry4.get().strip()
-            if not filter_value:
-                self.output_text1.insert(tk.END, "Filter not entered\n")
-            else:
-                self.filter = filter_value
-                self.config_messagge(f"Filter: {self.filter}\n")
-                self.output_text1.insert(tk.END, f"Filter set to: {self.filter}\n")
-                self.oath_data.append(f"filter: {self.filter}")
-
-                self.label4.grid_forget()
-                self.entry4.grid_forget()
-                self.button4.grid_forget()
-                
-                self.output_text1.insert(tk.END, "\nAll LDAP configuration data collected!\n")
-                self.output_text1.insert(tk.END, f"LDAP Server: {self.ldap_server}\n")
-                self.output_text1.insert(tk.END, f"Bind DN: {self.bind_dn}\n")
-                self.output_text1.insert(tk.END, f"Bind Password: {'*' * len(self.bind_password)}\n") 
-                self.output_text1.insert(tk.END, f"Base DN: {self.base_dn}\n")
-                self.output_text1.insert(tk.END, f"Filter: {self.filter}\n")
-                
-                self.done_button = tk.Button(self.root, text="Done", command=self.destroy, 
-                                                     font=('Arial', 9), width=8, relief="raised")
-                self.done_button.pack(pady=10) 
-
-                self.output_text1.grid(row=0, column=0, columnspan=2, pady=5, sticky="nsew") 
-
-        self.output_text1.see(tk.END)
-    
-    def del_folder(self):
-        try:
-            os.remove(self.ldap_conf_pass)
-            print(f"Файл '{self.ldap_conf_pass}' успешно удален.🗑️")
+            if os.path.exists(self.ldap_conf_pass):
+                os.remove(self.ldap_conf_pass)
+                print(f"Файл '{self.ldap_conf_pass}' успешно удален.🗑️")
         except FileNotFoundError:
-            print(f"Ошибка: Файл '{self.ldap_conf_pass}' не найден.")
+            pass
         except PermissionError:
             print(f"Ошибка: Недостаточно прав для удаления файла '{self.ldap_conf_pass}'.")
         except Exception as e:
             print(f"Произошла непредвиденная ошибка при удалении файла: {e}")
-        
-def run_standalone_tester():
-    
-    root_for_standalone = tk.Tk()
-    root_for_standalone.withdraw() 
 
-    app_tester = LDAuth(root_for_standalone) 
-    
+def run_standalone_tester():
+    """Функция для автономного тестирования окна конфигурации."""
+    root_for_standalone = tk.Tk()
+    root_for_standalone.withdraw()
+    app_tester = LDAPAuthConfigWindow(root_for_standalone, pas="ldap_config.cfg")
     app_tester.protocol("WM_DELETE_WINDOW", lambda: on_standalone_close(app_tester, root_for_standalone))
-    
-    root_for_standalone.mainloop() 
+    root_for_standalone.mainloop()
 
 def on_standalone_close(toplevel_window, root_window):
-
+    """Обработчик закрытия для автономного теста."""
     toplevel_window.destroy()
     root_window.destroy()
 
 if __name__ == "__main__":
-    run_standalone_tester() 
+    run_standalone_tester()
