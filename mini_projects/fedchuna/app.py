@@ -12,6 +12,8 @@ from network_tester import tester as t
 from LDAP_app import LDAP_app as ld
 from LDAP_app import modules_ldap as ml
 
+sys.stdout.reconfigure(encoding='utf-8')
+sys.stderr.reconfigure(encoding='utf-8')
 class App(tk.Tk):
 
     def __init__(self):
