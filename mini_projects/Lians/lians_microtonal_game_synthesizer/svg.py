@@ -4,7 +4,7 @@ import wand.image
 from defines import (
     BATTLESHIP_GREY,
     FLORAL_WHITE,
-    GRAY,
+    LIGHT_GRAY_CH,
     DIAMOND,
     LIGHT_GRAY_CH,
     BRINK_PINK,
@@ -76,3 +76,4 @@ def svg2png(w, h, n, fc, sc):
 
 if __name__ == "__main__":
     setup_img()
+
