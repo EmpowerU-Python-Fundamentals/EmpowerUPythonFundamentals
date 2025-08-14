@@ -8,4 +8,4 @@ def class_name_changer(cls, new_name):
         raise ValueError("Class name must contain only legal chars!")
     if new_name[0].isdigit():
         raise ValueError("Class name must start with a letter!")
-    cls.__name__ = new_name
+    cls.__name__ =  
