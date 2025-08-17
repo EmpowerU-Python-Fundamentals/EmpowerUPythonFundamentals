@@ -4,7 +4,6 @@
 def max_of_two_numbers(a, b):
     """
     Returns the larger of two numbers.
-    If the numbers are equal — returns b.
     """
     return a if a > b else b
 
@@ -59,9 +58,14 @@ def main():
         print("Area of the circle:", area_circle(radius))
 
     else:
+        print("Invalid choice.")
+main()
 
 # Task 3. Write a function that calculates the number of characters included in a given string
-# • input: "hello"
+# input: "hello" 
+# output: {"h":1, "e":1, "l":2, "o":1}
+
+from collections import Counter
 
 def char_frequency(s):
     """
@@ -71,10 +75,7 @@ def char_frequency(s):
 
 text = input("Enter a string: ")
 result = char_frequency(text)
-print("Character frequency:", result)# • output: {"h":1, "e":1, "l":2, "o":1}
-
-from collections import Counter
-
+print("Character frequency:", result)
 main()
 
 
