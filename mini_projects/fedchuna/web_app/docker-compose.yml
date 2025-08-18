@@ -1,0 +1,16 @@
+
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: gunicorn --bind 0.0.0.0:5001 web_app:app
+    ports:
+      - "5001:5001"
+    env_file: .env
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13-alpine
+    env_file: .env
