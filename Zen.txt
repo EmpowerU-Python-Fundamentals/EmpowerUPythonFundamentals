@@ -15,15 +15,15 @@
 14  'Although that way may not be obvious at first unless you're Dutch.'
 15   Now is better than never.
 16  'LiliaSt'
-17  'uliana-krektun'
+17  'If the implementation is hard to explain, it's a bad idea.'
 18  If the implementation is easy to explain, it may be a good idea.
 19  'Namespaces are one honking great idea -- let's do more of those!'
-20  'KShust'
+20  Beautiful is better than ugly
 21  Explicit is better than implicit.
 22  'nazargrechka1'
 23  'Complex is better than complicated.'
 24  'Flat is better than nested.'
-25  'Sparse is better than dense'
+25  'Sparse is better than dense.'
 26  'Vasylmelny'
 27  'Hugoist'
 28  'Although practicality beats purity.'
@@ -77,7 +77,7 @@
 75  'FesenkoAnton'
 76  Although never is often better than *right* now
 77  Beautiful is better than ugly.
-78  'yhalk1'
+78  'Explicit is better than implicit.'
 79  'BobryshevDS'
 80  'Complex is better than complicated.'
 81  'nomadjkeee'
@@ -99,7 +99,7 @@
 97  Explicit is better than implicit.
 98  'ngnlzer0'
 99  Simple is better than complex.
-100  'Anastasiia-Hv'
+100  Flat is better than nested.
 101  Sparse is better than dense.
 102  'Polysshkin'
 103  'bherych'
@@ -115,3 +115,7 @@
 113  'AnnaKhrystiuk'
 114  'Namespaces are one honking great idea -- let's do more of those!'
 115  'Although never is often better than *right* now.'
+116  Explicit is better than implicit.
+117  'TEZv' 
+118  Special cases aren't special enough to break the rules.
+119  Although practicality beats purity.
