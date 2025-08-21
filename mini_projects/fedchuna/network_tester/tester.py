@@ -18,39 +18,38 @@ from keylooker import module as m
 class Apl(tk.Toplevel): 
     
     def __init__(self, master=None):
-        super().__init__(master) 
+        super().__init__(master)
         self.root = self
         self.log_file_name = "tester_log.log"
         self.log_pass = m.get_log_file_path(self.log_file_name)
         self.log_message("---Aplication Inicialized---")
-        self.title("Main window")
-        self.geometry("600x550") 
-        self.resizable(False, False) 
+        self.title("Network Tester")
+        self.geometry("600x550")
+        self.resizable(False, False)
         
-        self.config(bg="grey") 
-        
+        self.config(bg="grey")
         style = ttk.Style(self)
         style.configure("Custom.TLabel", background="grey", foreground="black", font=('Arial',12))
       
         
-        main_frame = ttk.Frame(self, style="Custom.TLabel", relief="flat", borderwidth=0) 
+        main_frame = ttk.Frame(self, style="Custom.TLabel", relief="flat", borderwidth=0)
         main_frame.pack(expand=True, padx=20, pady=20) 
 
         current_row = 0
 
         self.label = ttk.Label(main_frame, text="Type IP address to check:", style="Custom.TLabel")
-        self.label.grid(row=current_row, column=0, columnspan=2, pady=(15, 5), sticky="n") 
+        self.label.grid(row=current_row, column=0, columnspan=2, pady=(15, 5), sticky="n")
         current_row += 1
         
         self.entry = ttk.Entry(main_frame)
-        self.entry.grid(row=current_row, column=0, columnspan=2, pady=5, sticky="ew") 
+        self.entry.grid(row=current_row, column=0, columnspan=2, pady=5, sticky="ew")
         self.entry.bind("<Return>", lambda event: self.on_button_click("Ping"))  # Добавляем обработчик нажатия Enter
         current_row += 1
         
         
         self.button = tk.Button(main_frame, text="ping", command=lambda: self.on_button_click("Ping"),
                                 font=('Arial', 10), width=10, relief="raised") # Добавим шрифт, ширину и рельеф
-        self.button.grid(row=current_row, column=0, columnspan=2, pady=5, sticky="n") 
+        self.button.grid(row=current_row, column=0, columnspan=2, pady=5, sticky="n")
         current_row += 1
         
         self.label1 = ttk.Label(main_frame, text="Type IP address to trace:", style="Custom.TLabel")
@@ -88,7 +87,6 @@ class Apl(tk.Toplevel):
         self.log_message(f"{button_name} had closed")
     
     def get_resource_path(self, relative_path):
-       
         try:
             base_path = sys._MEIPASS
         except Exception:

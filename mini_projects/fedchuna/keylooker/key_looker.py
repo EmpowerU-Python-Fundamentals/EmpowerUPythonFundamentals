@@ -4,33 +4,23 @@ import os
 import pygame as pg
 from . import module as m
 
-
-
-# --- Новая функция для получения пути к ресурсам ---
 def get_resource_path(relative_path):
-    """
-    Determines the correct path for a resource,
-    working both in development and after PyInstaller compilation.
-    """
+
     try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = sys._MEIPASS
     except Exception:
-        # For development, use the script's directory
         base_path = os.path.dirname(os.path.abspath(__file__))
 
     return os.path.join(base_path, relative_path)
 
-# --- Функція для логування, щоб уникнути дублювання коду ---
 def log_message(message, log_file_path):
-    """ Writes a timestamped message to the specified log file. """
+
     try:
         with open(log_file_path, 'a', encoding='utf-8') as log_f:
             log_f.write(f"{m.date_time()}:{message}\n")
     except Exception as e:
         print(f"Error writing to log file {log_file_path}: {e}")
 
-# --- Головна функція, яка містить логіку Pygame ---
 def run_key_looker():
     pg.init()
     pg.mixer.init()
@@ -40,11 +30,8 @@ def run_key_looker():
     SCREEN_WIDTH = 800
     SCREEN_HEIGHT = 600
 
-    # Получаем пути к ресурсам
     image_path = get_resource_path(os.path.join("img", "scr.jpg"))
-    # sound_path = get_resource_path(os.path.join("sound", "zvuk.wav"))
     log_file_name = "log_keylooker.log"
-    # m.get_log_file_path теперь будет создавать папку logs рядом с .exe
     keylooker_log_path = m.get_log_file_path(log_file_name)
 
     gameDisplay = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -119,7 +106,7 @@ def run_key_looker():
                 gameDisplay.blit(TEXT, attempts_text_rect)
             else:
                 TEXT = font_exit.render("EXIT",True, BLACK)
-                attempts_text_rect = TEXT.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT //2))
+                attempts_text_rect = TEXT.get_rect(center=(SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT //2 - 50))
                 gameDisplay.blit(TEXT, attempts_text_rect)
 
             pg.display.flip()
@@ -134,7 +121,5 @@ def run_key_looker():
             log_message("\nPROGRAM EXIT", keylooker_log_path)
             pg.quit()
 
-# --- КЛЮЧЕВОЙ БЛОК: Запуск программы только если скрипт запускается напрямую ---
 if __name__ == '__main__':
-    # Теперь мы не используем sys.argv, так как все ресурсы находятся внутри пакета
     run_key_looker()
