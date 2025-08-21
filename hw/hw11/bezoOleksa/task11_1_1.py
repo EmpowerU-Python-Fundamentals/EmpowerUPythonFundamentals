@@ -1,14 +1,28 @@
-while True:
+class IncorrectAge(ValueError):
+    pass
+
+def askNatural(msg='Enter a natural number: ', error=ValueError):
     try:
-        age = int(input('Enter your age: '))
-    except ValueError:
-        print('Your age should be a natural number')
-        continue
-    if age < 1:
-        print('Your age should be a natural number')
-        continue
-    if age % 2:
-        print('Your age is odd number')
+        num = int(input(msg))
+        if num > 0:
+            return num
+        else:
+            raise error
+    except (error, ValueError):
+        return None
+
+def evenOrOdd(num):
+    if num % 2:
+        return 'odd'
     else:
-        print('Your age is even number')
-    break
+        return 'even'
+
+def run():
+    age = askNatural('Enter your age: ', error=IncorrectAge)
+    while not age:
+        print('Your age should be a natural number')
+        age = askNatural('Enter your age: ', error=IncorrectAge)
+    print('Your age is', evenOrOdd(age), 'number')
+
+if __name__ == '__main__':
+    run()

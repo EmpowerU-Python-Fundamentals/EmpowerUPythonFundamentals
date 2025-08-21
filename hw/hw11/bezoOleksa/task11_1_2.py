@@ -1,13 +1,24 @@
-day = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
-while True:
+class IncorrectWeekday(ValueError):
+    pass
+
+def askWeekday():
     try:
-        inp = int(input('Enter a number of day in a week: '))
-    except ValueError:
-        print('Day in a week should be natural number less than 8')
-        continue
-    if inp < 0 or inp > 7:
-        print('Day in a week should be natural number less than 8')
-        continue
-    print(f'{inp} day in a week is {day[inp]}')
-    break
+        day = int(input('Enter a number of day in a week: '))
+        if 0 <= day <= 7:
+            return day
+        else:
+            raise IncorrectWeekday
+    except (IncorrectWeekday, ValueError):
+        return None
+
+def run():
+    day = askWeekday()
+    while not day:
+        print('Day should be a natural number less than 8')
+        day = askWeekday()
+    print(day, 'in a week is', weekday[day])
+
+if __name__ == '__main__':
+    run()
