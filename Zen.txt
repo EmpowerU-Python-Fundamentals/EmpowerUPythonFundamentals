@@ -101,7 +101,7 @@
 99  Simple is better than complex.
 100  Flat is better than nested.
 101  Sparse is better than dense.
-102  'Polysshkin'
+102  'Readability count'
 103  'bherych'
 104  Although practicality beats purity.
 105  'Tyk0wka'
