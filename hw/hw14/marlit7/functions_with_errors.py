@@ -9,3 +9,4 @@ def get_symbol_position(text, symbol):
 def merge(dict1, dict2):
     dict1.update(dict2)
     return dict1
+
