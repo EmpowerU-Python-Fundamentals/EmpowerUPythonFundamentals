@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Завантаження файлу</title>
+</head>
+<body>
+    <h2>Завантажити Phonebook</h2>>
+
+<form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+    <input type="file" name="phonebook" accept=".xlsx,.xls,.odt">
+    <button type="submit">Завантажити Phonebook</button>
+</form>
+
+  {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+          {% for msg in messages %}
+            <li>{{ msg }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <!-- ТУТ ВСТАВЛЯЄМО таблицю -->
+    {% if table_data %}
+        <table border="1">
+            <thead>
+                <tr>
+                    {% for col in table_data[0].keys() %}
+                        <th>{{ col }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in table_data %}
+                    <tr>
+                        {% for value in row.values() %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+</body>
+</html>
