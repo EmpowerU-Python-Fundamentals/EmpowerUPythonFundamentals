@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Завантаження Excel</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+  <!-- Кастомний CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card login-card w-100" style="max-width: 400px;">
+      <div class="login-header">
+        <h2>Завантаження довідника</h2>
+      </div>
+      <div class="card-body">
+        <form method="POST" action="{{ url_for('upload') }}" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="file" class="form-label">Виберіть файл Excel</label>
+            <input class="form-control" type="file" id="file" name="phonebook" accept=".xls,.xlsx">
+          </div>
+          <button type="submit" class="btn btn-custom w-100">Завантажити</button>
+        </form>
+        <div class="text-center mt-3">
+          <a href="{{ url_for('phonebook') }}">Назад до телефонного довідника</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+.header {
+    background-color: #0D3B66;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.department-bar {
+    background-color: #6C757D;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    margin-bottom: 15px;
+}
+
+body {
+      background-color: #f8f9fa;
+    }
+
+    .login-header {
+      background-color: #0D3B66;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      border-radius: 0.25rem 0.25rem 0 0;
+    }
+
+    .login-card {
+      border-radius: 0.25rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .btn-custom {
+      background-color: #6C757D;
+      color: white;
+    }
+
+    .btn-custom:hover {
+      background-color: #5a6268;
+      color: white;
+    }

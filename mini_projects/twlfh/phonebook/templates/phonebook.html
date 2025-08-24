@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Телефонний довідник</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="container-fluid">
+
+    <header class="header p-3 mb-3 d-flex flex-column flex-md-row justify-content-between align-items-center">
+      <h1 class="fs-4">Телефонний довідник ТОВ АгроСхід</h1>
+      <div class="d-flex">
+        <input class="form-control me-2" type="search" placeholder="Пошук" aria-label="Search" id="searchInput">
+      </div>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {% if grouped_data %}
+        {% for block in grouped_data %}
+            <div class="department-container">
+                <div class="department-bar py-2 mb-3">
+                    <h2 class="fs-5 mb-0">{{ block.department }}</h2>
+                </div>
+
+                <div class="table-responsive mb-4">
+                    <table class="table table-striped-columns">
+                        <thead>
+                            <tr>
+                                <th scope="col">Посада</th>
+                                <th scope="col">ПІБ</th>
+                                <th scope="col">Внутрішній номер</th>
+                                <th scope="col">Домашній номер</th>
+                                <th scope="col">Мобільний номер</th>
+                                <th scope="col">Поштова скринька</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in block.rows %}
+                                <tr class="table-row">
+                                    {% for cell in row %}
+                                        <td>{{ cell }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="text-center">
+            <p>Дані відсутні</p>
+        </div>
+    {% endif %}
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('searchInput');
+      const departmentContainers = document.querySelectorAll('.department-container');
+
+      searchInput.addEventListener('input', (event) => {
+        const query = event.target.value.toLowerCase();
+
+        departmentContainers.forEach(container => {
+          const departmentName = container.querySelector('h2').textContent.toLowerCase();
+          const tableRows = container.querySelectorAll('.table-row');
+          let departmentHasMatches = false;
+
+          if (departmentName.includes(query)) {
+            departmentHasMatches = true;
+            tableRows.forEach(row => {
+              row.style.display = '';
+            });
+          } else {
+            tableRows.forEach(row => {
+              const rowText = row.textContent.toLowerCase();
+              if (rowText.includes(query)) {
+                row.style.display = '';
+                departmentHasMatches = true;
+              } else {
+                row.style.display = 'none';
+              }
+            });
+          }
+
+          if (departmentHasMatches) {
+            container.style.display = '';
+          } else {
+            container.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
