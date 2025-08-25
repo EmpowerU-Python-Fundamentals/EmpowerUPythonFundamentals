@@ -1,0 +1,9 @@
+fastapi
+pydantic
+uvicorn[standard]
+sqlalchemy
+psycopg2-binary
+python-dotenv
+passlib[bcrypt]
+python-jose
+email-validator
