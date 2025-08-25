@@ -140,7 +140,7 @@ class LDAPAuthConfigWindow(tk.Toplevel):
             self.config_data['filter'] = value
             self.output_text.insert(tk.END, f"Фильтр установлен: {self.config_data['filter']}\n")
             self._hide_step("Filter")
-            self._finish_and_save()
+            self._show_step("Filter_for_group")
     
     def _confirm_filter_for_group(self):
         value = self.widgets["Filter_for_group"][1].get().strip()

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ласкаво просимо!</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            background: linear-gradient(135deg, #d4edc9, #a8d58e); /* Салатовий градієнт */
+            color: #2e624c; /* Темно-салатовий текст */
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8); /* Напівпрозорий білий фон */
+            padding: 200px 100px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            color: #5b9b6e; /* Насичений салатовий */
+        }
+
+        p {
+            font-size: 1.2em;
+            color: #6a8c54; /* Оливковий відтінок */
+        }
+
+        .actions {
+            margin-top: 30px;
+        }
+
+        button {
+            background-color: #5b9b6e; /* Насичений салатовий */
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #4a7d5a; /* Темніший відтінок при наведенні */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %}
+
+                                                            {% for category, message in messages %}
+                                                                        {{ message }}
+                                                                        {% endfor %} 
+
+        {% endif %} {% endwith %}
+        <h1>Вітаємо !!!</h1>
+        <p>Ми раді бачити вас тут!!!!</p>
+        <div class="actions">
+            <form method="post">
+                <button type="submit" name="button" value="login">Перехід до авторизації</button>
+            </form>
+            <form method="post">
+                <button type="submit" name="button" value="register">Реєстрація</button>
+            </form>
+        </div>
+    </div> 
+</body>
+</html>
