@@ -1,0 +1,6 @@
+"""Function that calculates the number of characters in a string"""
+def char_count(text):
+    result = {char: text.count(char) for char in set(text)}
+    return(result)
+
+print (char_count(str(input("Enter the word to count all characters: \n"))))

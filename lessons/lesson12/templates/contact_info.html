@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакт: {{ contact.name }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #4CAF50;
+            text-align: center;
+        }
+        .contact-details {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .contact-details p {
+            margin: 0 0 10px 0;
+            line-height: 1.5;
+        }
+        .contact-details p strong {
+            color: #4CAF50;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if contact %}
+            <h1>Деталі контакту</h1>
+            <div class="contact-details">
+                <p><strong>Ім'я:</strong> {{ contact.name }}</p>
+                <p><strong>Номер телефону:</strong> {{ contact.phone_number }}</p>
+                <p><strong>ID:</strong> {{ contact.id }}</p>
+            </div>
+        {% else %}
+            <h1>Контакт не знайдено</h1>
+            <p>Вибачте, запитуваний контакт не існує.</p>
+        {% endif %}
+        <a href="/" class="back-link">Повернутися до списку</a>
+    </div>
+</body>
+</html>
