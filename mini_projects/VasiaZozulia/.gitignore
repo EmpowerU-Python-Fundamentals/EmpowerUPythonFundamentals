@@ -1,0 +1,9 @@
+.venv/
+Monitoring.wpr
+Monitoring.wpu
+__pycache__/
+config.yaml
+events.db
+folders.yaml
+log.txt
+conf
