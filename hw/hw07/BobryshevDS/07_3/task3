@@ -1,0 +1,5 @@
+# 3. No yelling!
+def filter_words(st):
+    words = st.split()
+    result = " ".join(words).lower()
+    return result.capitalize()
