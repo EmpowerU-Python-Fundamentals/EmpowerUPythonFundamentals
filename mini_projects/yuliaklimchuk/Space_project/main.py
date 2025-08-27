@@ -44,10 +44,10 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-background_image = pygame.image.load(resource_path("img/bg.jpg"))
+background_image = pygame.image.load(resource_path("mini_projects\yuliaklimchuk\Space_project\img/bg.jpg"))
 background_image= pygame.transform.scale(background_image, (WIDTH, HEIGHT)) 
 
-highscore_file = resource_path("highscore.txt")
+highscore_file = resource_path("mini_projects\yuliaklimchuk\Space_project\highscore.txt")
 
 with open (highscore_file, 'r', encoding="utf-8") as file:
     highscore = int(file.read() or 0)
@@ -56,7 +56,7 @@ with open (highscore_file, 'r', encoding="utf-8") as file:
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
-        self.image = pygame.image.load(resource_path("img/ship.png")).convert_alpha()  # PNG з прозорістю
+        self.image = pygame.image.load(resource_path("mini_projects\yuliaklimchuk\Space_project\img/ship.png")).convert_alpha()  # PNG з прозорістю
         self.image = pygame.transform.scale(self.image, (120, 120)) 
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
@@ -87,7 +87,7 @@ class Player(pygame.sprite.Sprite):
 class Asteroid(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
-        self.image = pygame.image.load(resource_path("img/asteroid.png")).convert_alpha()  # PNG з прозорістю
+        self.image = pygame.image.load(resource_path("mini_projects\yuliaklimchuk\Space_project\img/asteroid.png")).convert_alpha()  # PNG з прозорістю
         self.image = pygame.transform.scale(self.image, (80, 80)) 
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
@@ -103,7 +103,7 @@ class Asteroid(pygame.sprite.Sprite):
 class Explosion(pygame.sprite.Sprite):
     def __init__(self, x, y, img):
         super().__init__()
-        self.image = pygame.image.load(resource_path("img/explosion.png") if img == "ship" else resource_path("img/asteroid_explosion.png")).convert_alpha()  # PNG з прозорістю
+        self.image = pygame.image.load(resource_path("mini_projects\yuliaklimchuk\Space_project\img/explosion.png") if img == "ship" else resource_path("mini_projects\yuliaklimchuk\Space_project\img/asteroid_explosion.png")).convert_alpha()  # PNG з прозорістю
         self.image = pygame.transform.scale(self.image, (110, 110)) 
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
@@ -148,7 +148,7 @@ device_info = sd.query_devices(kind='input')
 SAMPLE_RATE = int(device_info['default_samplerate'])
 
 # 2. Завантажуємо модель
-model = Model(resource_path("model"))  
+model = Model(resource_path("mini_projects\yuliaklimchuk\Space_project\model"))  
 recognizer = KaldiRecognizer(model, SAMPLE_RATE)
 
 # ============================================= Слухання голосу ===============================
