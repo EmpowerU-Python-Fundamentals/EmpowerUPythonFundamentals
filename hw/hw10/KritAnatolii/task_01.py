@@ -29,3 +29,37 @@ class Human:
         print ("This is a Human class.")
    
 #TASK 3
+class Employee:
+    total_employees = 0
+    
+    def __init__(self, name, salary):
+        self.name = name
+        self.salary = salary
+        Employee.total_employees += 1
+
+    @classmethod
+    def show_count(cls):
+        """Display total number of employees"""
+        print(f"Total number of employees: {cls.total_employees}")
+
+    def show_employee(self):
+        """Display info about a single employee"""
+        print(f"Name: {self.name}, Salary: {self.salary}")
+
+
+emp1 = Employee("Andrii", 50000)
+emp2 = Employee("Liudmyla", 60000)
+
+# Display individual employee info
+emp1.show_employee()
+emp2.show_employee()
+
+# Display total number of employees
+Employee.show_count()
+
+print("\n--- Class Information ---")
+print("Base classes:", Employee.__base__)
+print("Namespace:", Employee.__dict__)
+print("Class name:", Employee.__name__)
+print("Module name:", Employee.__module__)
+print("Docstring:", Employee.__doc__)
