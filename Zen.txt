@@ -24,7 +24,7 @@
 23  'Complex is better than complicated.'
 24  'Flat is better than nested.'
 25  'Sparse is better than dense.'
-26  'Vasylmelny'
+26  'Readability counts.'
 27  'Hugoist'
 28  'Although practicality beats purity.'
 29  Errors should never pass silently.
