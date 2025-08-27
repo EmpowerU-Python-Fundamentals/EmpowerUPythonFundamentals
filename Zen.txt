@@ -119,3 +119,4 @@
 117  'TEZv' 
 118  Special cases aren't special enough to break the rules.
 119  Although practicality beats purity.
+120  Sparse is better than dense.
