@@ -17,5 +17,13 @@ def circle_area(r):
     """this function returns an area of a circle, where r is a radius"""
     return 3.14*r*r
 
-print(circle_area(3))
+def number_of_characters(word):
+    d = {}
+    for ch in word:
+        if ch in d:
+            d[ch] += 1
+        else:
+            d[ch] = 1
+    print(d)
+number_of_characters("hello")
 
