@@ -14,4 +14,4 @@ def count_chars(word):
 
 print(count_chars("hello")) 
 
-# вивід - {'h': 1, 'e': 1, 'l': 2, 'o': 1}
+# вивід - {'h': 1, 'e': 1, 'l': 2, 'o': 1} 
