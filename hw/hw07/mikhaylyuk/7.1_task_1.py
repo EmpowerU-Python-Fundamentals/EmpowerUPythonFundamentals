@@ -10,7 +10,7 @@ def largest_number(a, b):
         return b
     
 print(largest_number(15,54))
-# Вивід 54 
+#  Вивід 54 
 
 
 
