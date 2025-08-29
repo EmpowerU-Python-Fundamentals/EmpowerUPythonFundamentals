@@ -1,0 +1,14 @@
+{% extends "main/base.html" %}
+{% block title %}Нова нотатка{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center">
+    <div class="card shadow-lg p-4 register-card">
+        <div class="text-center mb-4">
+             <h3 class="fw-bold">Створіть нову нотатку</h3>
+            <p class="text-muted">Не має меж для вашої фантазії</p>
+        </div>
+        {% include "note/_form.html" %}
+    </div>
+</div>
+{% endblock %}

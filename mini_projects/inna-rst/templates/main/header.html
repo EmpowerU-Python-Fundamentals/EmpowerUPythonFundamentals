@@ -1,0 +1,39 @@
+<div class="page-wrapper">
+    <header class="header header-6">
+        <div class="header-middle">
+            <div class="container">
+                <div class="header-left">
+                    <div class="header-search header-search-extended header-search-visible d-lg-block">
+                        <!--                            <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>-->
+                        <form action="#" method="get">
+                            <div class="header-search-wrapper search-wrapper-wide">
+                                <label for="q" class="sr-only">Search</label>
+                                <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+                                <input type="search" class="form-control" name="q" id="q" placeholder="Пошук ..."
+                                       required>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="header-center">
+                    <a class="navbar-brand fw-bold text-accent logo-app" href="{{ url_for('main.index') }}">
+                        <i class="bi bi-journal-text"></i> NotesApp
+                    </a>
+                </div>
+
+                <div class="header-right">
+                    <div class="wrap-auth-links">
+                        {% if current_user.is_authenticated %}
+                        <span class="user-info"><i class="bi bi-person-circle"></i>Вітаю, <b>{{current_user.username}}</b>!</span><span class="l-divider">/</span>
+                        <a class="auth-link" href="{{ url_for('auth.logout') }}"><i class="bi bi-arrow-bar-right"></i>Вихід</a>
+                        {% else %}
+                        <a class="auth-link" href="{{ url_for('auth.login') }}"><i class="bi bi-person-walking"></i>Увійти</a><span class="l-divider">/</span>
+                        <a class="auth-link" href="{{ url_for('auth.registration') }}"><i class="bi bi-person-lines-fill"></i>Реєстрація</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+</div>

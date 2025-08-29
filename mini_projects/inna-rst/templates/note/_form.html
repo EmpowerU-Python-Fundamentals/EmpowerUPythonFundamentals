@@ -1,0 +1,83 @@
+<form method="POST" id="categoryForm">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        {{ form.title.label(class="form-label") }}
+        {{ form.title(class="form-control" + (" is-invalid" if
+        form.title.errors else ""), placeholder="Назва категорії") }}
+        {% for error in form.title.errors %}
+        <div class="invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        {{ form.content.label(class="form-label") }}
+        {{ form.content(class="form-control" + (" is-invalid" if
+        form.content.errors else ""), style="resize: vertical;") }}
+        {% for error in form.content.errors %}
+        <div class="invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        {{ form.category.label(class="form-label") }}
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex align-items-center justify-content-between"
+                    type="button" id="categoryDropdown" data-bs-toggle="dropdown">
+            <span id="selectedCategoryDisplay">
+                {% if form.category.data and form.category.data != 0 %}
+                    {% for category in categories %}
+                        {% if category.id == form.category.data %}
+                            {% if category.icon %}
+                                <i class="bi {{ category.icon }} me-2"
+                                   {% if category.color %}style="color: {{ category.color }};" {% endif %}></i>
+                            {% endif %}
+                            {{ category.name }}
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <i class="bi bi-x-circle me-2 text-muted"></i>
+                    Без категорії
+                {% endif %}
+            </span>
+            </button>
+
+            <ul class="dropdown-menu w-100" style="max-height: 300px; overflow-y: auto;">
+                <li>
+                    <a class="dropdown-item category-option d-flex align-items-center"
+                       href="#" data-value="0" data-name="Без категорії">
+                        <i class="bi bi-x-circle me-2 text-muted"></i>
+                        <span>Без категорії</span>
+                    </a>
+                </li>
+                {% if categories %}
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                {% for category in categories %}
+                <li>
+                    <a class="dropdown-item category-option d-flex align-items-center"
+                       href="#"
+                       data-value="{{ category.id }}"
+                       data-name="{{ category.name }}"
+                       data-icon="{{ category.icon or '' }}"
+                       data-color="{{ category.color or '' }}">
+                        {% if category.icon %}
+                        <i class="bi {{ category.icon }} me-2"
+                           {% if category.color %}style="color: {{ category.color }};" {% endif %}></i>
+                        {% else %}
+                        <i class="bi bi-folder me-2 text-muted"></i>
+                        {% endif %}
+                        <span>{{ category.name }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+
+        <!-- Приховане поле для надсилання форми -->
+        {{ form.category(style="display: none;", id="categorySelect") }}
+    </div>
+
+    {{ form.submit(class="btn btn-accent btn-lg w-100 rounded-pill mb-3") }}
+</form>

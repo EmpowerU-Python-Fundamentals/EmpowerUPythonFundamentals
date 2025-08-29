@@ -1,0 +1,76 @@
+{% extends "main/base.html" %}
+{% block title %}Вхід{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card auth-card shadow-lg border-0">
+                <div class="row g-0">
+                    <!-- Ілюстрація/акцентна панель -->
+                    <div class="col-md-5 auth-illustration d-none d-md-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='images/sign_in_user.png') }}"
+                             alt="Welcome" class="img-fluid ms-3 mb-3 auth-illus-img">
+                    </div>
+
+                    <!-- Форма -->
+                    <div class="col-md-7">
+                        <div class="p-4 p-lg-5">
+                            <h3 class="fw-bold mb-1">З поверненням 👋</h3>
+                            <p class="text-muted mb-4">Увійдіть, щоб продовжити роботу з нотатками</p>
+
+                            <form method="POST" action="" novalidate>
+                                {{ form.hidden_tag() }}
+
+                                <div class="mb-3">
+                                    {{ form.username.label(class="form-label") }}
+
+                                    <div class="input-group input-group-lg">
+                                        <span class="input-group-text rounded-pill-start"><i class="bi bi-person"></i></span>
+                                        {{ form.username(class="form-control rounded-pill-end" + (" is-invalid" if
+                    form.username.errors else ""),
+                                        placeholder="Твоє им'я") }}
+                                    </div>
+                                    {% for error in form.username.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="mb-3">
+                                    {{ form.password.label(class="form-label") }}
+                                    <div class="input-group input-group-lg">
+                                        <span class="input-group-text rounded-pill-start"><i
+                                                class="bi bi-lock"></i></span>
+                                        {{ form.password(class="form-control rounded-pill-end"+ (" is-invalid" if
+                    form.password.errors else ""), placeholder="Пароль") }}
+                                    </div>
+                                    {% for error in form.password.errors %}
+                                        <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <div class="form-check">
+                                        {{ form.remember(class="form-check-input", id="remember") }}
+                                        {{ form.remember.label(class="form-check-label", for="remember") }}
+                                    </div>
+                                    <a href="{ url_for('forgot') if false else '#' }}"
+                                       class="small text-decoration-none">Забули пароль?</a>
+                                </div>
+
+                                {{ form.submit(class="btn btn-accent btn-lg w-100 rounded-pill mb-3") }}
+
+                            </form>
+                            <hr class="divider"/>
+                            <p class="text-center mt-4 mb-0">
+                                Немає облікового запису?
+                                <a href="{{ url_for('auth.registration') }}" class="text-accent text-decoration-none">Зареєструватись</a>
+                            </p>
+                        </div>
+                    </div>
+                </div> <!-- /row -->
+            </div> <!-- /card -->
+        </div>
+    </div>
+</div>
+{% endblock %}
