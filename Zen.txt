@@ -102,7 +102,7 @@
 100  Flat is better than nested.
 101  Sparse is better than dense.
 102  'Readability  count'
-103  'bherych'
+103  Special cases aren't special enough to break the rules.
 104  Although practicality beats purity.
 105  'Tyk0wka'
 106  'Lightmee'
