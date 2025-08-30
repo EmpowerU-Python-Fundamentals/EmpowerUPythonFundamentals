@@ -34,10 +34,10 @@
                 <div class="wrap-btns-notes d-flex justify-content-between align-items-center">
 
                     <div class="btn-group" role="group" aria-label="Basic example">
-                                           <a href="{{ url_for('note.edit_note', note_id=note.id) }}" class="btn btn-sm btn-light"
-                       title="Редагувати">
-                        <i class="bi bi-pencil"></i>
-                    </a>
+                        <a href="{{ url_for('note.edit_note', note_id=note.id) }}" class="btn btn-sm btn-light"
+                           title="Редагувати">
+                            <i class="bi bi-pencil"></i>
+                        </a>
                         <button type="button" class="btn delete-note-btn btn-sm btn-danger-subtle"
                                 data-id="{{ note.id }}"
                                 title="Видалити">
@@ -45,14 +45,75 @@
                         </button>
 
                     </div>
-                           <a href="{{ url_for('note.note_view', id=note.id) }}"
-                           class="btn btn-sm btn-outline-primary">Читати</a>
+                    <a href="{{ url_for('note.note_view', id=note.id) }}"
+                       class="btn btn-sm btn-outline-primary">Читати</a>
                 </div>
             </div>
         </div>
     </div>
     {% endfor %}
 </div>
+
+<!-- Пагінація -->
+{% if pagination.pages > 1 %}
+<nav aria-label="Pagination">
+    <ul id="notes-pagination" class="pagination justify-content-center">
+        <!-- Попередня сторінка -->
+        {% if pagination.has_prev%}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('main.dashboard', page=pagination.prev_num, category=active_category) }}">
+                &laquo; Попередня
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&laquo; Попередня</span>
+        </li>
+        {% endif %}
+
+        <!-- Номери сторінок -->
+        {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+        {% if page_num != pagination.page %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('main.dashboard', page=page_num, category=active_category) }}">
+                {{page_num}}
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item active">
+            <span class="page-link">{{ page_num }}</span>
+        </li>
+        {% endif %}
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">…</span>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        <!-- Наступна сторінка -->
+        {% if pagination.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('main.dashboard', page=pagination.next_num, category=active_category) }}">
+                Наступна &raquo;
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Наступна &raquo;</span>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+
+<!-- Інформація про пагінацію -->
+<div class="text-center text-muted">
+    Показано {{ pagination.per_page* (pagination.page - 1) + 1}} -
+    {{ pagination.per_page * (pagination.page - 1) + pagination.items|length}}
+    з {{ pagination.total }} записів
+</div>
+{% endif %}
 {% else %}
 <p class="text-muted">Немає нотаток.</p>
 {% endif %}

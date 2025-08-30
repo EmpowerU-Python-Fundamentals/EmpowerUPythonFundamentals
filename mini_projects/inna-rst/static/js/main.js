@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-     // Инициализация выбора иконок (только если элементы существуют)
+    // Ініціалізація вибору іконок (тільки якщо елементи існують)
     const iconOptions = document.querySelectorAll('.icon-option');
     const hiddenSelect = document.getElementById('iconSelect');
 
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Инициализация выбора цвета (только если элементы существуют)
+    // Ініціалізація вибору кольору (тільки якщо елементи існують)
     const enableColorCheck = document.querySelector('#enableColorCheck');
     const colorSelection = document.querySelector('#colorSelection');
 
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
         enableColorCheck.addEventListener('change', toggleColorSelection);
     }
 
-    // Функция для модального окна удаления
+    // Функція для модального вікна видалення
     function showDeleteModal(categoryId) {
         fetch(`/categories/${categoryId}/details`)
             .then(response => response.json())
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
-    // Обработчики кнопок удаления
+    // Обробники кнопок видалення
     const deleteButtons = document.querySelectorAll('.delete-btn');
     deleteButtons.forEach(button => {
         button.addEventListener('click', function () {
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-      // Функция для модального окна удаления
+    // Функція для модального вікна видалення
     function showDeleteModalNote(noteId) {
         fetch(`/notes/${noteId}/details`)
             .then(response => response.json())
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
-    // Обработчики кнопок удаления
+    // Обробники кнопок видалення
     const deleteNoteButtons = document.querySelectorAll('.delete-note-btn');
     deleteNoteButtons.forEach(button => {
         button.addEventListener('click', function () {
@@ -155,49 +155,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    const categoryOptions = document.querySelectorAll('.category-option');
-    const selectedDisplay = document.getElementById('selectedCategoryDisplay');
-    const hiddenSelectBlock = document.getElementById('categorySelect');
-    const dropdownButton = document.getElementById('categoryDropdown');
-
-    if (!categoryOptions.length || !selectedDisplay || !hiddenSelectBlock) {
-        return;
-    }
-
-    categoryOptions.forEach(option => {
-        option.addEventListener('click', function(e) {
-            e.preventDefault();
-
-            const value = this.getAttribute('data-value');
-            const name = this.getAttribute('data-name');
-            const icon = this.getAttribute('data-icon');
-            const color = this.getAttribute('data-color');
-
-            // Обновляем скрытое поле
-            hiddenSelectBlock.value = value;
-
-            // Обновляем отображение
-            let displayHtml = '';
-            if (icon) {
-                displayHtml += `<i class="bi ${icon} me-2"`;
-                if (color) displayHtml += ` style="color: ${color};"`;
-                displayHtml += `></i>`;
-            } else if (value === '0') {
-                displayHtml += '<i class="bi bi-x-circle me-2 text-muted"></i>';
-            } else {
-                displayHtml += '<i class="bi bi-folder me-2 text-muted"></i>';
-            }
-            displayHtml += `<span>${name}</span>`;
-
-            selectedDisplay.innerHTML = displayHtml;
-
-            // Закрываем dropdown
-            const dropdown = bootstrap.Dropdown.getInstance(dropdownButton);
-            if (dropdown) {
-                dropdown.hide();
-            }
-        });
-    });
 });
 
 function initColorSelection() {
@@ -205,7 +162,7 @@ function initColorSelection() {
     const colorSelection = document.querySelector('#colorSelection'); // используйте правильный селектор
 
     if (!enableColorCheck || !colorSelection) {
-        // Эта страница не содержит элементы выбора цвета
+        // Ця сторінка не містить елементів вибору кольору
         return;
     }
 
@@ -226,11 +183,68 @@ function initColorSelection() {
         }
     }
 
-    // Проверить состояние при загрузке страницы
+
     toggleColorSelection();
-    // Добавить обработчик события
     enableColorCheck.addEventListener('change', toggleColorSelection);
 }
 
-// Запустить инициализацию после загрузки DOM
-document.addEventListener('DOMContentLoaded', initColorSelection);
+const categoryOptions = document.querySelectorAll('.category-option');
+const selectedDisplay = document.getElementById('selectedCategoryDisplay');
+const hiddenSelectBlock = document.getElementById('categorySelect');
+const dropdownButton = document.getElementById('categoryDropdown');
+
+
+if (!categoryOptions.length || !selectedDisplay || !hiddenSelectBlock || !dropdownButton) {
+    console.log('Required elements for category selection not found');
+} else {
+    // Функція оновлення відображення
+    function updateCategoryDisplay(value, name, icon, color) {
+        let displayHtml = '';
+        if (icon) {
+            displayHtml += `<i class="bi ${icon} me-2"`;
+            if (color) displayHtml += ` style="color: ${color};"`;
+            displayHtml += `></i>`;
+        } else if (value === '0') {
+            displayHtml += '<i class="bi bi-x-circle me-2 text-muted"></i>';
+        } else {
+            displayHtml += '<i class="bi bi-folder me-2 text-muted"></i>';
+        }
+        displayHtml += `<span>${name}</span>`;
+        selectedDisplay.innerHTML = displayHtml;
+    }
+
+    categoryOptions.forEach(option => {
+        option.addEventListener('click', function (e) {
+            e.preventDefault();
+            const value = this.getAttribute('data-value');
+            const name = this.getAttribute('data-name');
+            const icon = this.getAttribute('data-icon');
+            const color = this.getAttribute('data-color');
+
+            hiddenSelectBlock.value = value;
+            updateCategoryDisplay(value, name, icon, color);
+
+            const dropdown = bootstrap.Dropdown.getInstance(dropdownButton);
+            dropdown && dropdown.hide();
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const currentValue = hiddenSelectBlock.value;
+        if (currentValue) {
+            const activeOption = Array.from(categoryOptions).find(option =>
+                option.getAttribute('data-value') === currentValue
+            );
+            if (activeOption) {
+                updateCategoryDisplay(
+                    currentValue,
+                    activeOption.getAttribute('data-name'),
+                    activeOption.getAttribute('data-icon'),
+                    activeOption.getAttribute('data-color')
+                );
+                categoryOptions.forEach(opt => opt.classList.remove('active'));
+                activeOption.classList.add('active');
+            }
+        }
+    });
+}

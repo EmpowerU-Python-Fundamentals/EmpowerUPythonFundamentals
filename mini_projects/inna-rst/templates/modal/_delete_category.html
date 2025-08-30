@@ -1,0 +1,36 @@
+<div class="modal fade" id="deleteCategoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">
+                    <i class="bi bi-exclamation-triangle text-warning me-2"></i>
+                    Підтвердження видалення
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div id="categoryPreview" class="mb-3"></div>
+                <h6 class="mb-2">Ви впевнені, що хочете видалити категорію</h6>
+                <p class="mb-3"><strong id="categoryNameToDelete"></strong>?</p>
+                <div id="notesWarning" class="alert alert-warning border-0" style="background: #fff3cd; display: none;">
+                    <small class="text-muted">
+                        <i class="bi bi-info-circle me-1"></i>
+                        <span id="notesWarningText"></span>
+                    </small>
+                </div>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-1"></i>
+                    Скасувати
+                </button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash me-1"></i>
+                        Видалити категорію
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

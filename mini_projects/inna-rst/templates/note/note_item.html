@@ -4,95 +4,48 @@
 {% block content %}
 <div class="row">
     <div class="col-md-4 col-sm-6 mb-3 border-r">
-        <div class="card-header bg-white border-0 fw-semibold">
-            <div class="m-header">Категориї</div>
-            <a href="{{ url_for('category.create_category') }}" class="btn btn-sm btn-accent float-end rounded-pill"
-               title="Додати категорію">
-                <i class="bi bi-plus-lg"></i>
-            </a>
-        </div>
-        <div class="card category-card card-default">
-            <div class="card-body">
-                <div class="d-flex align-items-center mb-2">
-                    <div class="category-icon-default me-2">
-                        <i class="bi-folder"></i>
-                    </div>
-                    <h5 class="card-title mb-0">Без категорії</h5>
-                </div>
-                <p class="text-muted small">{{ uncategorized_notes_count}} нотаток</p>
-            </div>
-        </div>
-        {% for category, notes_count in categories %}
-        <div class="card category-card" {% if category.color %}style="border-left: 4px solid {{ category.color }};" {%
-             endif %}>
-            <div class="d-flex align-items-center">
-                <div class="card-body flex-grow-1">
-                    <div class="d-flex align-items-center mb-2">
-                        {% if category.color %}
-                        <div class="category-icon me-2" style="background: {{ category.color }};">
-                            <i class="{{ category.icon or 'bi-folder' }} text-white"></i>
-                        </div>
-                        {% else %}
-                        <div class="category-icon-default me-2">
-                            <i class="{{ category.icon or 'bi-folder' }}"></i>
-                        </div>
-                        {% endif %}
-                        <h5 class="card-title mb-0">{{ category.name }}</h5>
-                    </div>
-                    <p class="text-muted small mb-0">{{ notes_count }} нотаток</p>
-                </div>
-
-                <div class="card-btns d-flex gap-2">
-                    <a href="{{ url_for('category.edit_category', id=category.id) }}" class="btn btn-sm btn-light"
-                       title="Редагувати">
-                        <i class="bi bi-pencil"></i>
-                    </a>
-                    <button type="button" class="btn delete-btn btn-sm btn-danger-subtle" data-id="{{ category.id }}"
-                            title="Видалити">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        {% endfor %}
+        {% include "dashboard/_categories.html"%}
     </div>
     <div class="col-md-8 col-sm-6">
-        <div class="d-flex justify-content-justify-content-between align-items-center mb-3 gap-5">
-            <h4 class="fw-bold">Нотатки</h4>
-            {% if note.category.color %}
-            <span class="category-tag"
-                  style="background: {{ note.category.color }}20; color: {{ note.category.color }}; border: 1px solid {{ note.category.color }}40;">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-justify-content-between align-items-center mb-3 gap-5">
+                {% if note.category.color %}
+                <span class="category-tag"
+                      style="background: {{ note.category.color }}20; color: {{ note.category.color }}; border: 1px solid {{ note.category.color }}40;">
                             <i class="{{ note.category.icon or 'bi-folder' }} me-1"></i>
                             {{ note.category.name }}
                         </span>
-            {% else %}
-            <span class="category-tag-default">
-                <i class="{{ note.category.icon or 'bi-folder' }} me-1"></i>
-                {{ note.category.name }}
-            </span>
-            {% endif %}
+                {% else %}
+                    <span class="category-tag-default">
+                    <i class="{{ note.category.icon or 'bi-folder' }} me-1"></i>
+                    {{ note.category.name }}
+                    </span>
+                {% endif %}
 
 
-            <div class="btn-group" role="group" aria-label="Basic example">
-                <a href="{{ url_for('note.edit_note', note_id=note.id) }}" class="btn btn-sm btn-light"
-                   title="Редагувати">
-                    <i class="bi bi-pencil"></i>
-                </a>
-                <button type="button" class="btn delete-note-btn btn-sm btn-danger-subtle"
-                        data-id="{{ note.id }}"
-                        title="Видалити">
-                    <i class="bi bi-trash"></i>
-                </button>
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a href="{{ url_for('note.edit_note', note_id=note.id) }}" class="btn btn-sm btn-light"
+                       title="Редагувати">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <button type="button" class="btn delete-note-btn btn-sm btn-danger-subtle"
+                            data-id="{{ note.id }}"
+                            title="Видалити">
+                        <i class="bi bi-trash"></i>
+                    </button>
 
+                </div>
+            </div>
+            <div class="card-body mb">
+                <h3 class="card-title">{{ note.title }}</h3>
+                <p class="card-text">{{ note.content }}</p>
+            </div>
+
+            <div class="card-footer text-muted d-flex align-items-center justify-content-between">
+                <small>Створено: {{ note.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
+                <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary btn-sm">⬅ Повернутись</a>
             </div>
         </div>
-        <div class="d-flex align-items-center mb-3">
-            <h4 class="fw-bold">{{ note.title }}</h4>
-        </div>
-        <p>
-            {{ note.content }}
-        </p>
     </div>
 </div>
 {% endblock %}

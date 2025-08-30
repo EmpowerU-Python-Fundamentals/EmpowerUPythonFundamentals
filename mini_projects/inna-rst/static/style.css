@@ -848,3 +848,44 @@ input:focus {
 .dropdown-item.active, .dropdown-item:active {
     background-color: var(--accent-light);
 }
+
+.link-category{
+    text-decoration: none;
+}
+
+.link-category:hover{
+    text-decoration: none;
+}
+
+.link-category .card-title{
+    color: rgb(33, 37, 41);
+}
+
+.link-category:hover .category-icon {
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.link-category:hover .card-title{
+    color: rgb(45, 49, 51);
+}
+
+.category-card.active {
+    background: rgba(248, 216, 190, 0.27);
+}
+
+#notes-pagination .page-link{
+    color: var(--accent);
+}
+
+#notes-pagination .page-item.active{
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+#notes-pagination .active>.page-link, .page-link.active{
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}

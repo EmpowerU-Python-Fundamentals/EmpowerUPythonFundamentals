@@ -5,11 +5,7 @@ from sqlalchemy.orm import joinedload
 from models import Note
 from functions import get_categories_with_notes_count
 
-
 main = Blueprint("main", __name__)
-
-
-
 
 
 @main.route("/")
@@ -28,31 +24,43 @@ def dashboard():
     # All categories for the current user
     categories = get_categories_with_notes_count(current_user.id)
 
-    # Количество заметок без категории
     uncategorized_notes_count = Note.query.filter_by(
         user_id=current_user.id,
         category_id=None
     ).count()
 
+    # Параметри пагінації
+    page = request.args.get('page', 1, type=int)
+    per_page = 6  # кількість записів на сторінку
 
     # query-parametr (?category=ID)
     category_id = request.args.get("category", type=int)
+    query = Note.query.options(joinedload(Note.category)).filter_by(user_id=user_id).order_by(Note.updated_at.desc())
 
-    if category_id:
-        notes = Note.query.options(joinedload(Note.category)) \
-            .filter_by(user_id=user_id, category_id=category_id) \
-            .all()
-    else:
-        notes = Note.query.options(joinedload(Note.category)) \
-            .filter_by(user_id=user_id) \
-            .all()
+    if category_id is not None:  # означає параметр є в URL
+        if category_id == 0:
+            # Усі нотатки без категорії
+            query = query.filter(Note.category_id.is_(None))
+        else:
+            # Нотатки конкретної категорії
+            query = query.filter_by(category_id=category_id)
 
-    if not notes and not categories:
+    notes_pagination = query.paginate(
+        page=page,
+        per_page=per_page,
+        error_out=False  # не выдавать ошибку 404 при неверной странице
+    )
+
+    notes = notes_pagination.items
+
+    # notes = query.all()
+
+    if not notes and not categories and uncategorized_notes_count == 0:
         return render_template("dashboard/empty_dashboard.html")
-
 
     return render_template("dashboard/dashboard.html",
                            categories=categories,
                            uncategorized_notes_count=uncategorized_notes_count,
                            notes=notes,
+                           pagination=notes_pagination,
                            active_category=category_id)

@@ -43,7 +43,7 @@
 
             <ul class="dropdown-menu w-100" style="max-height: 300px; overflow-y: auto;">
                 <li>
-                    <a class="dropdown-item category-option d-flex align-items-center"
+                    <a class="dropdown-item category-option d-flex align-items-center {% if form.category.data == '0' %}active{% endif %}"
                        href="#" data-value="0" data-name="Без категорії">
                         <i class="bi bi-x-circle me-2 text-muted"></i>
                         <span>Без категорії</span>
@@ -55,7 +55,7 @@
                 </li>
                 {% for category in categories %}
                 <li>
-                    <a class="dropdown-item category-option d-flex align-items-center"
+                    <a class="dropdown-item category-option d-flex align-items-center {% if form.category.data == category.id|string %}active{% endif %}"
                        href="#"
                        data-value="{{ category.id }}"
                        data-name="{{ category.name }}"
