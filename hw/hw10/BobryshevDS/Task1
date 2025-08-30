@@ -1,0 +1,12 @@
+class Polygon:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+
+class Rectangle(Polygon):
+    def square(self):
+        return self.width * self.height
+
+# Example usage
+rect = Rectangle(5, 3)
+print(rect.square())  # Output: 15

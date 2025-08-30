@@ -1,0 +1,49 @@
+class Employee:
+    _employee_count = 0
+    
+    def __init__(self, name, salary):
+        self.name = name
+        self.salary = salary
+        Employee._employee_count += 1
+    
+    @classmethod
+    def total_employees(cls):
+        print(f"Загальна кількість працівників: {cls._employee_count}")
+    
+    def display_info(self):
+        print(f"Ім'я: {self.name}, Зарплата: {self.salary}")
+    
+    @property
+    def base(self):
+        return "Працівник"
+    
+    @property
+    def dict(self):
+        return {"name": self.name, "salary": self.salary}
+    
+    @property
+    def name(self):
+        return self._name
+    
+    @name.setter
+    def name(self, value):
+        self._name = value
+    
+    @property
+    def module(self):
+        return __name__
+    
+    @property
+    def doc(self):
+        return "Клас Employee для управління даними працівників"
+
+# Example usage
+emp1 = Employee("Ді", 5000)
+emp2 = Employee("Ол", 6000)
+emp1.display_info()
+emp2.display_info()
+Employee.total_employees()
+print(f"Base: {emp1.base}")
+print(f"Dict: {emp1.dict}")
+print(f"Module: {emp1.module}")
+print(f"Doc: {emp1.doc}")

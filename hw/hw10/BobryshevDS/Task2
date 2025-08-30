@@ -1,0 +1,20 @@
+class Human:
+    def __init__(self, name):
+        self.name = name
+    
+    def display_welcome(self):
+        print(f"Привіт, {self.name}!")
+    
+    @classmethod
+    def species_info(cls):
+        return "Homosapiens"
+    
+    @staticmethod
+    def arbitrary_message():
+        return "Довільне повідомлення!"
+
+# Приклад
+person = Human("Dmytro")
+person.display_welcome()
+print(Human.species_info())
+print(Human.arbitrary_message())
