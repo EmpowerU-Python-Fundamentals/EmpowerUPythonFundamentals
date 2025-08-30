@@ -1,0 +1,20 @@
+{% extends "main/base.html" %}
+{% block title %}Мої нотатки{% endblock %}
+
+{% block content %}
+    <div class="d-flex flex-column align-items-center justify-content-center text-center py-5">
+      <img src="{{ url_for('static', filename='images/empty-state.png') }}" alt="Empty Notes" class="welcome-img mb-4">
+
+      <h3 class="fw-bold">У вас поки немає нотаток</h3>
+      <p class="text-muted mb-4">Створіть першу категорію або нотатку, щоб почати користуватись додатком</p>
+
+      <div class="d-flex gap-3">
+        <a href="{{ url_for('category.create_category') }}" class="btn btn-accent rounded-pill px-4">
+          <i class="bi bi-folder-plus"></i> Додати категорію
+        </a>
+        <a href="{{ url_for('note.create_note') }}" class="btn btn-outline-accent rounded-pill px-4">
+          + Створити першу нотатку
+        </a>
+      </div>
+    </div>
+{% endblock %}

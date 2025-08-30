@@ -1,0 +1,95 @@
+{% extends "main/base.html" %}
+{% block title %}Заметки{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Боковая панель -->
+    <div class="col-md-3 mb-4">
+        <div class="card shadow-sm rounded-4 border-0">
+            <div class="card-header bg-white border-0 fw-semibold">
+                Категории
+                <button class="btn btn-sm btn-accent float-end rounded-pill" data-bs-toggle="modal"
+                        data-bs-target="#addCategoryModal">
+                    <i class="bi bi-plus-lg"></i>
+                </button>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-center hover-list">
+                    Без категории
+                    <span class="badge bg-accent text-white rounded-pill">4</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center hover-list">
+                    Работа
+                    <span class="badge bg-accent text-white rounded-pill">2</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center hover-list">
+                    Учёба
+                    <span class="badge bg-accent text-white rounded-pill">5</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Основная часть -->
+    <div class="col-md-9">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold">Заметки</h4>
+            <button class="btn btn-accent rounded-pill" data-bs-toggle="modal" data-bs-target="#addNoteModal">
+                <i class="bi bi-plus-lg"></i> Добавить
+            </button>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+                <div class="card shadow-sm rounded-4 border-0 h-100 note-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Идея дизайна</h5>
+                        <p class="card-text text-muted">Минималистичный UI с оранжевым акцентом...</p>
+                    </div>
+                    <div class="card-footer bg-white border-0 text-end">
+                        <button class="btn btn-sm btn-light"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-sm btn-danger-subtle"><i class="bi bi-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: добавить категорию -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content rounded-4">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold">Новая категория</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control rounded-pill" placeholder="Название категории">
+            </div>
+            <div class="modal-footer border-0">
+                <button class="btn btn-accent rounded-pill">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: добавить заметку -->
+<div class="modal fade" id="addNoteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content rounded-4">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold">Новая заметка</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control mb-2 rounded-pill" placeholder="Заголовок">
+                <textarea class="form-control rounded-4" rows="4" placeholder="Текст заметки"></textarea>
+            </div>
+            <div class="modal-footer border-0">
+                <button class="btn btn-accent rounded-pill">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

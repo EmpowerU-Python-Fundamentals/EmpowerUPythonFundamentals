@@ -1,0 +1,69 @@
+{% extends "main/base.html" %}
+{% block title %}Заметки{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center">
+    <div class="card shadow-lg p-4 register-card">
+        <div class="text-center mb-4">
+            <img src="{{ url_for('static', filename='images/bulb.png') }}" alt="Register" class="register-img mb-3">
+            <h3 class="fw-bold">Створіть обліковий запис ✨</h3>
+            <p class="text-muted">Швидко та безкоштовно почніть зберігати ваші нотатки</p>
+        </div>
+
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+                {{ form.username.label(class="form-label") }}
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text rounded-pill-start"><i class="bi bi-person"></i></span>
+                    {{ form.username(class="form-control rounded-pill-end" + (" is-invalid" if form.username.errors else
+                    ""),
+                    placeholder="Твоє ім'я") }}
+                </div>
+                {% for error in form.username.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.password.label(class="form-label") }}
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text rounded-pill-start"><i class="bi bi-lock"></i></span>
+                    {{ form.password(class="form-control rounded-pill-end" + (" is-invalid" if form.password.errors else
+                    ""),
+                    placeholder="Пароль") }}
+                </div>
+                {% for error in form.password.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.confirm_password.label(class="form-label") }}
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text rounded-pill-start"><i class="bi bi-lock"></i></span>
+                    {{ form.confirm_password(class="form-control rounded-pill-end" + (" is-invalid" if
+                    form.confirm_password.errors else ""),
+                    placeholder="Підтвердіть пароль") }}
+                </div>
+                {% for error in form.confirm_password.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="d-grid">
+                {{ form.submit(class="btn btn-accent btn-lg rounded-pill") }}
+            </div>
+        </form>
+
+
+        <hr class="my-4">
+
+        <div class="text-center">
+            <p class="text-muted small mb-2">Вже є обліковий запис?</p>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-outline-accent rounded-pill px-4">Увійти</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
