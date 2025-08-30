@@ -12,7 +12,7 @@ def calculate_area_triangle(a, b, c):
     """This function calculates area of triangle. It accepts three sides of rectangle as parameters and uses Heron's formula."""
     try:
         p = (a + b + c) / 2
-        return round((p * (p - a) * (p - b) * (p - c)) * 0.5, 2)
+        return round((p * (p - a) * (p - b) * (p - c)) ** 0.5, 2)
     except ValueError:
         print("Invalid input.")
     except Exception as e:
