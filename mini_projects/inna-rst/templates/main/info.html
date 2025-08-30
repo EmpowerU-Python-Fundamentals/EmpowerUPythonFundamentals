@@ -1,0 +1,36 @@
+{% extends "main/base.html" %}
+{% block title %}Заметки{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column align-items-center justify-content-center text-center py-5">
+    <img src="{{ url_for('static', filename='images/welcome.png') }}" alt="Welcome" class="welcome-img mb-4">
+
+    <h2 class="fw-bold">Ласкаво просимо в NotesApp 👋</h2>
+    <p class="text-muted mb-4">
+        Зберігайте нотатки в одному місці. Доступні з будь-якого пристрою.
+    </p>
+
+    <div>
+        <a href="{{ url_for('auth.login') }}" class="btn btn-accent rounded-pill px-4 me-2">Увійти</a>
+        <a href="{{ url_for('auth.registration') }}" class="btn btn-outline-accent rounded-pill px-4">Реєстрація</a>
+    </div>
+</div>
+<div class="row mt-5 text-center">
+    <div class="col-md-4">
+        <i class="bi-pencil-square fs-1 text-accent"></i>
+        <h6 class="fw-bold mt-2">Створюйте нотатки</h6>
+        <p class="text-muted small">Швидко зберігайте думки та ідеї</p>
+    </div>
+    <div class="col-md-4">
+        <i class="bi-cloud fs-1 text-accent"></i>
+        <h6 class="fw-bold mt-2">Доступ з будь-якого пристрою</h6>
+        <p class="text-muted small">Ваші нотатки завжди з вами</p>
+    </div>
+    <div class="col-md-4">
+        <i class="bi-shield-check fs-1 text-accent"></i>
+        <h6 class="fw-bold mt-2">Безпека</h6>
+        <p class="text-muted small">Дані надійно захищені</p>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "main/base.html" %}
+{% block title %}Змінити категорію{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center">
+    <div class="card shadow-lg p-4 register-card">
+        <div class="text-center mb-4">
+<!--            <img src="{{ url_for('static', filename='images/bulb.png') }}" alt="Register" class="register-img mb-3">-->
+            <h3 class="fw-bold">Змінити категорію</h3>
+        </div>
+        {% include "category/_form.html" %}
+    </div>
+</div>
+{% endblock %}

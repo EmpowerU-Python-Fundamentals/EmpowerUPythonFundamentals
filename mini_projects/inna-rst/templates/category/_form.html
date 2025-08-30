@@ -1,0 +1,46 @@
+<form method="POST" id="categoryForm">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        {{ form.name.label(class="form-label") }}
+        {{ form.name(class="form-control" + (" is-invalid" if
+        form.name.errors else ""), placeholder="Назва категорії") }}
+        {% for error in form.name.errors %}
+        <div class="invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        <div class="form-check mb-3">
+            {{ form.enable_color(class="form-check-input", id="enableColorCheck", **{"data-bs-toggle": "collapse",
+            "data-bs-target": "#colorSelection"}) }}
+            {{ form.enable_color.label(class="form-check-label", for="enableColorCheck") }}
+        </div>
+
+        <div id="colorSelection" class="collapse">
+            <div class="card card-body mt-2">
+                <div class="d-flex align-items-center gap-2 mt-2">
+                    {{ form.color(class="form-control form-control-color", style="width: 60px; height: 40px;") }}
+                    <span class="text-muted">Виберіть колір для категорії</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label fw-bold">{{ form.icon.label.text }}</label>
+        <div class="icon-grid">
+            {% for value, label in form.icon.choices %}
+            <div class="icon-option {% if loop.first %}selected{% endif %}" data-value="{{ value }}">
+                <i class="{{ value }}"></i>
+                <span class="icon-label">{{ label }}</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Скрытый оригинальный select -->
+        {{ form.icon(class="form-select hidden", id="iconSelect") }}
+        {% for error in form.icon.errors %}
+        <div class="invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
+    </div>
+    {{ form.submit(class="btn btn-accent btn-lg w-100 rounded-pill mb-3") }}
+</form>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мій Профіль</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .profile-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            box-sizing: border-box;
+            margin-top: 20px; /* Отступ от флеш-сообщений */
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+        .profile-info {
+            text-align: left;
+            margin-bottom: 30px;
+        }
+        .profile-info p {
+            margin-bottom: 12px;
+            color: #555;
+            font-size: 1.05em;
+            display: flex;
+            align-items: center;
+        }
+        .profile-info p strong {
+            color: #333;
+            min-width: 120px; /* Для выравнивания */
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .logout-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #dc3545; /* Красный цвет для кнопки выхода */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: 600;
+        }
+        .logout-button:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+        .logout-button:active {
+            transform: translateY(0);
+        }
+
+        .action-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white !important;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .action-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        /* Стилі для flash повідомлень */
+        .flashes {
+          list-style-type: none;
+          padding: 10px;
+          margin: 0 auto; /* Отступы убраны, чтобы центрировать */
+          border-radius: 8px;
+          font-family: 'Inter', sans-serif;
+          max-width: 600px;
+          text-align: center;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .flashes li {
+          padding: 12px 20px;
+          margin-bottom: 8px;
+          border-radius: 8px;
+          font-size: 1em;
+          font-weight: 500;
+          transition: all 0.3s ease-in-out;
+        }
+        .flashes li.message {
+          background-color: #e0f2f7;
+          color: #0288d1;
+          border: 1px solid #b3e5fc;
+        }
+        .flashes li.success {
+          background-color: #e8f5e9;
+          color: #2e7d32;
+          border: 1px solid #c8e6c9;
+        }
+        .flashes li.error {
+          background-color: #ffebee;
+          color: #c62828;
+          border: 1px solid #ffcdd2;
+        }
+        .flashes li.warning {
+          background-color: #fffde7;
+          color: #fbc02d;
+          border: 1px solid #fff9c4;
+        }
+        .flashes li.info {
+          background-color: #e3f2fd; /* Light blue for info */
+          color: #1565c0; /* Darker blue for info */
+          border: 1px solid #90caf9;
+        }
+    </style>
+</head>
+<body>
+    <!-- БЛОК ДЛЯ FLASK FLASH СООБЩЕНИЙ -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flashes">
+          {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <div class="profile-container">
+        <h2>Мій Профіль</h2>
+        <div class="profile-info">
+            <p><strong>Email:</strong> {{ user_data.email }}</p>
+            <p><strong>Ім'я користувача:</strong> {{ user_data.username }}</p>
+            <p><strong>Номер телефону:</strong> {{ user_data.number }}</p>
+            <p><strong>Місто:</strong> {{ user_data.city }}</p>
+            <p><strong>Адреса:</strong> {{ user_data.address }}</p>
+        </div>
+        <form action="{{ url_for('logout') }}" method="POST">
+            <button type="submit" class="logout-button">Вийти</button>
+        </form>
+        <a href="{{ url_for('search') }}" class="action-button">Пошук користувача</a>
+    </div>
+
+</body>
+</html>
