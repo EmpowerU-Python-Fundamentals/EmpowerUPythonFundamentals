@@ -43,6 +43,18 @@ while run:
     if keys[pygame.K_DOWN]:
         COORD_Y = COORD_Y+DELTA_STEP
 
+    if COORD_X < 0:
+        COORD_X = 0
+    if COORD_Y < 0:
+        COORD_Y = 0
+    window_height = gameDisplay.get_height()
+    if COORD_Y + HEIGHT_RECTANGLE > window_height:
+        COORD_Y = window_height - HEIGHT_RECTANGLE
+    window_width = gameDisplay.get_width()
+    if COORD_X + WIDTH_RECTANGLE > window_width:
+        COORD_X = window_width - WIDTH_RECTANGLE
+
+
 
     gameDisplay.fill(BLACK_COLOR) 
 
