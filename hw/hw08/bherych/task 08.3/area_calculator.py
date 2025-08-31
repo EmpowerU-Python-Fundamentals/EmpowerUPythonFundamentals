@@ -7,10 +7,10 @@ def calculate_area_circle(r):
     """This function calculates the area of circle."""
     return math.pi * math.pow(r, 2)
 
-def calculate_area_rectangle(higth, width):
+def calculate_area_rectangle(height, width):
     """This function calculates the area of rectangle."""
-    return higth * width
+    return height * width
 
-def calculate_area_triangle(higth, side):
+def calculate_area_triangle(height, side):
     """This function calculates the area of triangle."""
-    return 0.5 * higth * side
+    return (height * side) / 2
