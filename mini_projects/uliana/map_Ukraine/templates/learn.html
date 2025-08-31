@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Start</title>
+  <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            text-align: center
+        }
+
+        .container {
+            max-width: 200 px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content:space-between;
+            align-items: center;
+        }
+
+        .container img {
+            max-width: 60%;
+            height: auto;
+            margin: 0 auto;
+            display: block;
+        }
+
+        #map {
+            width: 100%;
+            height: auto;
+            border: 2px solid #0057b8;
+            cursor: pointer;
+        }
+
+        p {
+            font-size: 25px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            font-weight: bold;
+            justify-content: center;
+            align-items: center;
+        }
+  </style>
+</head>
+<body>
+
+    <h1>Клікніть на точку, щоб побачити назву області</h1>
+    <p id="oblast-display"></p>
+    <div class="container">
+        <img id="map"
+             src="{{ url_for('static', filename='images/Map_of_Ukraine_political_simple_blank.png') }}"
+             alt="Map_of_Ukraine"
+             usemap="#workmap"
+        >
+        <map name="workmap">
+            {% for c in coordinates %}
+                <area shape="circle" coords="{{c.x}},{{c.y}},10" alt="{{c.oblast}}" href="#" onclick="showOblast('{{c.oblast}}'); return false;">
+            {% endfor %}
+        </map>
+    </div>
+
+    <script>
+    function showOblast(oblast) {
+            document.getElementById("oblast-display").textContent = oblast;
+        }
+    </script>
+
+</body>
+</html>
