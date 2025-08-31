@@ -25,5 +25,7 @@ def game():
         attempts += 1
         if check_number(guess, number):
             break
+    else:
+        print("Ooops, you exhausted your maximum amount of attempts. Better luck next time.")
 
 game()
