@@ -1,0 +1,9 @@
+{% extends "base.html"%}
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Sign up successful, {{first | capitalize}} {{last | capitalize}}!</h1>
+      <p class="col-md-8 fs-5">Sign in to see extra content!</p>
+      <a class="btn btn-primary btn-lg" href="{{ url_for('login') }}">Sign in</a>
+
+</div>
+{% endblock %}
