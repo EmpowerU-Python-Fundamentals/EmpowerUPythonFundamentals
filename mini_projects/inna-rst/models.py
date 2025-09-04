@@ -1,9 +1,8 @@
 from datetime import datetime, UTC
 from typing import Annotated
-from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, Integer, Text, DateTime, ForeignKey
+from sqlalchemy import String, Text, DateTime, ForeignKey
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from database import db
@@ -80,4 +79,4 @@ class Note(db.Model):
     user: Mapped["User"] = relationship("User", back_populates="notes")
 
     def __repr__(self) -> str:
-        return f"<Note {self.title}>"
+        return f"<Note {self.title} {self.category_id}>"

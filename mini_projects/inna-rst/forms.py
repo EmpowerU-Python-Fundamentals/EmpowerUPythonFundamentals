@@ -16,7 +16,7 @@ class LoginForm(FlaskForm):
 
 class CategoryForm(FlaskForm):
     name = StringField("Назва", validators=[DataRequired(), Length(min=2, max=100)])
-    # Чекбокс для включения/выключения цвета
+    # Чекбокс для увімкнення/вимкнення кольору
     enable_color = BooleanField("Використати колір для категорії", default=False)
     color = ColorField("Колір", default="#6c757d")
 
@@ -53,5 +53,5 @@ class NoteForm(FlaskForm):
         "Текст нотатки",
         render_kw={"rows": 6, "placeholder": "Введіть ваш текст сюди..."}
     )
-    category = SelectField("Категорія", coerce=int, choices=[])
+    category = SelectField("Категорія", coerce=int)
     submit = SubmitField("Зберегти")

@@ -38,10 +38,24 @@ def create_note():
 def edit_note(note_id):
     note = Note.query.filter_by(id=note_id, user_id=current_user.id).first_or_404()
     categories = Category.query.filter_by(user_id=current_user.id).all()
-    form = NoteForm(obj=note)
-    form.category.choices = [(0, "Без категорії")] + [
+    choices = [(0, "Без категорії")] + [
         (c.id, c.name) for c in categories
     ]
+    form = NoteForm(obj=note)
+    form.category.choices = choices
+
+    # Создаем форму с данными из запроса или объекта
+    # form = NoteForm(request.form, obj=note) if request.method == 'POST' else NoteForm(obj=note)
+    #
+    # # Всегда устанавливаем choices
+    # form.category.choices = choices
+    # Заполняем форму данными из объекта
+    # form.process(obj=note)
+
+    # Дополнительная проверка на случай, если category все равно None
+    if form.category.data is None:
+        form.category.data = note.category_id or 0
+
     if form.validate_on_submit():
         note.title = form.title.data
         note.content = form.content.data
@@ -90,4 +104,5 @@ def note_view(id):
     return render_template("note/note_item.html",
                            categories=categories,
                            uncategorized_notes_count=uncategorized_notes_count,
-                           note=note)
+                           note=note,
+                           active_category=note.category_id)
