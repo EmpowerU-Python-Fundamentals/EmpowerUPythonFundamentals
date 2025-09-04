@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Start</title>
+  <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 200 px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            justify-content:space-between;
+            align-items: center;
+        }
+
+         .button {
+            display: inline-block;
+            background-color: #ffd700;
+            color: #0057b8;
+            padding: 12px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 1.1em;
+            gap: 10px;
+        }
+        li {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+  </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Який формат обираєте?</h1>
+    <ul>
+            <li><a href="/learning" class="button">Вивчати</a>
+                <p>При натисканні на відповідну крапку, буде відображуватися назва області.</p>
+            <li><a href="/game" class="button">Грати</a>
+                <p>Після початку гри висвітиться назва однієї з областей, після чого потрібно натиснути на відповідну крапку.</p>
+        </ul>
+    </div>
+</body>
+</html>

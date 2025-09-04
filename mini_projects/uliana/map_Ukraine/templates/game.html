@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Start</title>
+  <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 200 px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content:space-between;
+            align-items: center;
+        }
+        .container img {
+            max-width: 60%;
+            height: auto;
+            margin: 0 auto;
+            display: block;
+        }
+        #map {
+            width: 100%;
+            height: auto;
+            border: 2px solid #0057b8;
+            cursor: pointer;
+        }
+        #oblast-display {
+            font-size: 25px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            font-weight: bold;
+            justify-content: center;
+            align-items: center;
+        }
+        .button {
+            display: block;
+            margin: 0 auto;
+            background-color: #ffd700;
+            color: #0057b8;
+            padding: 12px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            text-align: center;
+            width: 50%;
+            box-sizing: border-box;
+            font-size: 1.1em;
+            gap: 10px;
+        }
+
+  </style>
+</head>
+<body>
+    <div id="oblast-display">
+        <h3>Почнімо гру!</h3> <button id="start-button" class="button" onclick="startGame()">Почати гру</button>
+    </div>
+    <div class="container">
+        <img id="map"
+             src="{{ url_for('static', filename='images/Map_of_Ukraine_political_simple_blank.png') }}"
+             alt="Map_of_Ukraine"
+             usemap="#workmap"
+        >
+        <map name="workmap">
+            {% for c in coordinates %}
+                <area shape="circle" coords="{{c.x}},{{c.y}},10" alt="{{c.oblast}}" href="#" onclick="check('{{c.oblast}}'); return false;">
+            {% endfor %}
+        </map>
+        </div>
+
+    <script>
+    const allOblasts = {{ coordinates | tojson }};
+    let currentIndex = -1;
+    let currentCorrectOblast = '';
+
+    function startGame() {
+    document.getElementById("start-button").style.display = "none";
+    showNextRandomOblast();
+}
+    function showNextRandomOblast() {
+        if (allOblasts.length === 0) {
+            document.getElementById("oblast-display").textContent = "Вітаємо! Ви пройшли гру.";
+            return;
+        } else {
+            const randomIndex = Math.floor(Math.random() * allOblasts.length);
+            const randomOblast = allOblasts[randomIndex];
+            currentIndex = randomIndex;
+            currentCorrectOblast = randomOblast.oblast;
+            document.getElementById("oblast-display").textContent = `Знайди на карті наступну область: ${currentCorrectOblast}`;
+            }
+    }
+
+    function check(oblastClicked) {
+        if (oblastClicked === currentCorrectOblast) {
+            if (currentCorrectOblast === "АР Крим") {
+                document.getElementById("oblast-display").textContent = "Правильно! Це " + currentCorrectOblast + ".";
+            } else {
+                document.getElementById("oblast-display").textContent = "Правильно! Це " + currentCorrectOblast + " область.";
+            }
+            allOblasts.splice(currentIndex, 1);
+            setTimeout(showNextRandomOblast, 2000);
+        } else {
+            document.getElementById("oblast-display").textContent = 'Неправильно. Спробуйте ще раз (Знайди на карті наступну область: ' + currentCorrectOblast + ').';
+        }
+    }
+
+    </script>
+</body>
+</html>
