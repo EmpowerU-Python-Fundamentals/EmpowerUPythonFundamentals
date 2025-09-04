@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container my-5">
+    <div class="p-5 mb-4 bg-light rounded-3 shadow-sm">
+        <div class="container-fluid py-5">
+             {% if user %}
+
+               <!-- Logged-in view -->
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card shadow-lg border-0 rounded-3">
+                        <div class="card-body p-5">
+                            <h2 class="card-title mb-3">👋 Welcome back, {{ user.first_name }} {{ user.last_name }}!</h2>
+                            <p class="lead">You’re now logged in and have access to exclusive content 🎉</p>
+                            
+                            <!-- Example dashboard content -->
+                            <div class="row text-center mt-4">
+                                <div class="col-md-4 mb-3">
+                                    <div class="p-4 bg-light rounded shadow-sm h-100">
+                                        <h5>📊 Dashboard</h5>
+                                        <p class="small">View your stats & progress</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="p-4 bg-light rounded shadow-sm h-100">
+                                        <h5>⚙️ Settings</h5>
+                                        <p class="small">Manage your account</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="p-4 bg-light rounded shadow-sm h-100">
+                                        <h5>🚀 Coming Soon</h5>
+                                        <p class="small">More awesome features!</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-end mt-4">
+                                <a href="{{ url_for('logout') }}" class="btn btn-danger btn-lg">
+                                    <i class="bi bi-box-arrow-right"></i> Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             {% else %}
+
+            <div class="p-5 mb-4 bg-gradient text-white rounded-3 shadow-lg" style="background: linear-gradient(135deg, #6f42c1, #6610f2) !important;">
+                <div class="container-fluid py-5">
+                    <h1 class="display-4 fw-bold">🚀 Welcome to this AWESOME site!</h1>
+                    <p class="fs-5">Join our community and unlock cool features.</p>
+                    <a class="btn btn-light btn-lg me-3" href="{{ url_for('signup_form') }}">
+                        <i class="bi bi-person-plus"></i> Sign up
+                    </a>
+                    <a class="btn btn-light btn-lg me-3" href="{{ url_for('login') }}">
+                        <i class="bi bi-box-arrow-in-right"></i> Login
+                    </a>
+                </div>
+            </div>
+             {% endif %}
+            
+        </div>
+    </div>
+</div>
+{% endblock %}
