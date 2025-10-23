@@ -2,6 +2,7 @@ import pygame
 import pygame_gui
 import Colors
 import random
+import datetime
 
 pygame.init()
 
@@ -28,7 +29,8 @@ print(input_field.get_text())
 
 clock = pygame.time.Clock()
 running = True
-running1= True
+current_time =None
+
 while running:
     time_delta = clock.tick(60) / 1000.0
     manager.update(time_delta)
@@ -52,8 +54,7 @@ while running:
                         continue
                     if user_text == i:
                         message = f"Вітаємо!!! Це число {i}"
-                        pygame.time.delay(1000)
-                        running = False
+                        current_time = datetime.datetime.now() + datetime.timedelta(seconds=3)
                     elif user_text < i:
                         message = "Ваше число менше за загадане"
                         attempts+=1
@@ -67,18 +68,14 @@ while running:
                     print(f"attempt {attempts}")
                 input_field.set_text("")
                         
+    if current_time!=None and datetime.datetime.now() > current_time:
+        running=False 
+    
     text3 = font.render(f"{user_text}",True,Colors.Blue)
     screen.blit(text3,(height/4,width/4))
     text4 = font1.render(f"{message}",True,Colors.Red)
     screen.blit(text4,(height/4,width/2))
     manager.draw_ui(screen)
     pygame.display.update()
-
-while running1:
-    time_delta = clock.tick(60) / 1000.0
-    manager.update(time_delta)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running1 = False
 
 pygame.quit()
